@@ -1,6 +1,5 @@
 
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
@@ -29,7 +28,7 @@ function Profiles() {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar sx={{ width: 30, height: 30 }}
+          <Avatar sx={{ width: 34, height: 34 }}
             alt='Con Khỉ'
             src='https://imgs.search.brave.com/UFkmy5e0OMJbuC5PRZe-o069X8VGBF-qhM-cNe_TIJI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9oYXlj/YWZlLnZuL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIyLzExL2hp/bmgtYW5oLTEyLWNv/bi1naWFwLWN1dGUt/M0QtY29uLWtoaS10/dW9pLVRoYW4uanBn' />
         </IconButton>

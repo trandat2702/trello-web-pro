@@ -11,11 +11,11 @@ export default defineConfig({
         plugins: ['@emotion/babel-plugin']
       }
     }),
-    svgr()
+    svgr() // cấu hình svg như là 1 component React có thể css 1 cách dễ dàng
   ],
   resolve: {
     alias: [
-      { find: '~', replacement: '/src' }
+      { find: '~', replacement: '/src' } // Không còn cảnh ../../../../ rối rắm khi import file. Giờ chỉ cần ~/path/to/file
     ]
   },
   optimizeDeps: {
@@ -25,4 +25,5 @@ export default defineConfig({
       '@mui/material/Tooltip'
     ]
   }
+  //thêm nó vào optimizeDeps.include giúp giảm hiện tượng reload hoặc lỗi khi dùng hot reload.
 })

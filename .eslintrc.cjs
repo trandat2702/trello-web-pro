@@ -20,7 +20,7 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
-     "no-restricted-imports": [
+    "no-restricted-imports": [
       "error",
       {
         "patterns": [{ "regex": "^@mui/[^/]+$" }]
