@@ -6,7 +6,9 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/s
 import theme from './theme.js'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    {/* CssVarsProvider = "gốc theme" cho tất cả những j ở trong nó */}
     <CssVarsProvider theme={theme}>
+      {/* reset CSS mặc định của browser để đồng bộ giao diện */}
       <CssBaseline />
       <App />
     </CssVarsProvider>
