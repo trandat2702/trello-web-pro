@@ -11,7 +11,7 @@
  */
 
 
-const mapOrder = (originalArray, orderArray, key) => {
+export const mapOrder = (originalArray, orderArray, key) => {
   if (!originalArray || !orderArray || !key) return []
 
   const clonedArray = [...originalArray]
@@ -46,6 +46,3 @@ const mapOrder = (originalArray, orderArray, key) => {
 // Cuối cùng sẽ có thứ tự:
 // task2 → task1 → task3
 
-
-
-export default mapOrder
