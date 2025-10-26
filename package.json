@@ -21,8 +21,11 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/material": "^5.13.0",
+    "axios": "^1.12.2",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
