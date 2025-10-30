@@ -15,17 +15,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Tooltip from '@mui/material/Tooltip'
 import CloseIcon from '@mui/icons-material/Close'
 import ContentCut from '@mui/icons-material/ContentCut'
+import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ContentCopy from '@mui/icons-material/ContentCopy'
 import ContentPaste from '@mui/icons-material/ContentPaste'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import Button from '@mui/material/Button'
-import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCards from './ListCards/ListCards'
 import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'react-toastify'
-function Column({ column }) {
+function Column({ column, createNewCard }) {
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -62,12 +62,20 @@ function Column({ column }) {
   const toggleNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Card title is required', { position: "bottom-right" })
       return
     }
+    //Tạo dữ liệu Column để gọi API
+    const newCardData = {
+      title: newCardTitle,
+      columnId: column._id
+    }
+    //Gọi API tạo Column mới
+    await createNewCard(newCardData)
     console.log('Add new card:', newCardTitle)
+    //Đóng trạng thái thêm Column mới và Clear input
     toggleNewCardForm()
     setNewCardTitle('')
   }
@@ -179,34 +187,29 @@ function Column({ column }) {
         >
           {!openNewCardForm
             ?
-            <Box onClick={toggleNewCardForm} sx={{
-              minWidth: '250px',
-              maxWidth: '250px',
-              mx: 2,
-              borderRadius: '6px',
-              height: 'fit-content',
-              bgcolor: '#ffffff3d'
+            <Box sx={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
             }}>
-              <Button startIcon={<NoteAddIcon />}
+              <Button startIcon={<AddCardIcon />} onClick={toggleNewCardForm}
                 sx={{
-                  color: 'white',
+                  color: (theme) => theme.palette.text.main,
                   width: '100%',
                   justifyContent: 'flex-start',
                   pl: 2.5,
                   py: 1,
                 }}
-              >Add new column</Button>
+              >Add new card</Button>
+              <Tooltip title="Drag to move">
+                <DragHandleIcon sx={{ cursor: 'pointer' }} />
+              </Tooltip>
             </Box>
             : <Box sx={{
-              minWidth: '250px',
-              maxWidth: '250px',
-              mx: 2,
-              p: 1,
-              borderRadius: '6px',
-              height: 'fit-content',
-              bgcolor: '#ffffff3d',
+              height: '100%',
               display: 'flex',
-              flexDirection: 'column',
+              alignItems: 'center',
               gap: 1
             }}>
               <TextField
@@ -221,7 +224,7 @@ function Column({ column }) {
                 sx={{
                   '& label': { color: 'text.primary' },
                   '& input': {
-                    color: (theme) => theme.palette.text.main,
+                    color: (theme) => theme.palette.primary.main,
                     bgcolor: (theme) => theme.palette.mode === 'dark' ? '#333643' : 'white'
                   },
                   '& label.Mui-focused': { color: (theme) => theme.palette.primary.main },
@@ -264,7 +267,7 @@ function Column({ column }) {
           }
         </Box>
       </Box >
-    </div>
+    </div >
   )
 }
 

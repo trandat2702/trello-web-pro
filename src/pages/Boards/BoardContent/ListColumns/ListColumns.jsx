@@ -7,17 +7,23 @@ import Button from '@mui/material/Button'
 import NoteAddIcon from '@mui/icons-material/NoteAdd'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import CloseIcon from '@mui/icons-material/Close'
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Column title is required')
       return
     }
-    console.log('Add new column:', newColumnTitle)
+    //Tạo dữ liệu Column để gọi API
+    const newcolumnData = {
+      title: newColumnTitle
+    }
+    //Gọi API tạo Column mới
+    await createNewColumn(newcolumnData)
+    //Đóng trạng thái thêm Column mới và Clear input
     toggleNewColumnForm()
     setNewColumnTitle('')
   }
@@ -37,7 +43,7 @@ function ListColumns({ columns }) {
         overflowY: 'hidden',
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
-        {columns?.map(column => (<Column key={column._id} column={column} />))}
+        {columns?.map(column => (<Column key={column._id} column={column} createNewCard={createNewCard} />))}
         {/* Box add new column */}
         {!openNewColumnForm
           ?
@@ -72,51 +78,48 @@ function ListColumns({ columns }) {
             gap: 1
           }}>
             <TextField
-              label="Enter card title"
+              label="Enter column title"
               type="text"
               size="small"
-              variant="outlined"
+              variant='outlined'
               autoFocus
               value={newColumnTitle}
               onChange={(e) => setNewColumnTitle(e.target.value)}
               sx={{
-                '& label': { color: 'text.primary' },
-                '& input': {
-                  color: (theme) => theme.palette.text.main,
-                  bgcolor: (theme) => theme.palette.mode === 'dark' ? '#333643' : 'white'
-                },
-                '& label.Mui-focused': { color: (theme) => theme.palette.primary.main },
+                '& label': { color: 'white' },
+                '& input': { color: 'white' },
+                '& label.Mui-focused': { color: 'white' },
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
-                    borderColor: (theme) => theme.palette.primary.main
+                    borderColor: 'white'
                   },
                   '&:hover fieldset': {
-                    borderColor: (theme) => theme.palette.primary.main
+                    borderColor: 'white'
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: (theme) => theme.palette.primary.main
+                    borderColor: 'white'
                   },
-                  '& .MuiOutlinedInput-input': {
-                    borderRadius: 1
-                  }
                 }
               }} />
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
               <Button
                 onClick={addNewColumn}
-                variant='contained' color='success' size='small'
+                variant="contained"
+                color="success"
+                size="small"
                 sx={{
                   boxShadow: 'none',
                   border: '0.5px solid',
                   borderColor: (theme) => theme.palette.success.main,
-                  '&:hover': { bgcolor: (theme) => theme.palette.success.main }
+                  '&:hover': {
+                    bgcolor: (theme) => theme.palette.success.main,
+                  }
                 }}
-              >Add</Button>
+              >Add Column</Button>
               <CloseIcon
                 fontSize='small'
                 sx={{
-                  color: 'white',
-                  cursor: 'pointer',
+                  color: 'white', cursor: 'pointer',
                   '&:hover': { color: (theme) => theme.palette.warning.light }
                 }}
                 onClick={toggleNewColumnForm}

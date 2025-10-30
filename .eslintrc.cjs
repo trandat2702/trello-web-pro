@@ -2,14 +2,14 @@
 // Sample ESLint config for React project
 module.exports = {
   env: {
-    es6: true,
-    node: true,
-    browser: true
+    es6: true,    // cho phép sử dụng cú pháp ES6 như là const, let, v.v.
+    node: true,   // cho phép sử dụng cú pháp Node.js như require, module.exports, v.v.
+    browser: true  // cho phép sử dụng cú pháp trình duyệt như document, window, v.v.
   },
   extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended'
+    'eslint:recommended', // tìm các lỗi phổ biến trong JavaScript
+    'plugin:react/recommended', // tuân theo các quy tắc tốt nhất của React 
+    'plugin:react-hooks/recommended' // tuân theo các quy tắc tốt nhất của React Hooks
   ],
   plugins: [
     'react',
@@ -17,17 +17,17 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module' // cho phép sử dụng import/export
   },
   rules: {
     "no-restricted-imports": [
       "error",
       {
-        "patterns": [{ "regex": "^@mui/[^/]+$" }]
+        "patterns": [{ "regex": "^@mui/[^/]+$" }] // Ngăn chặn import kiểu import Component from '@mui/material' (gọi là default import từ package gốc). Mục đích là để buộc bạn dùng named import từ đường dẫn đầy đủ, ví dụ: import Button from '@mui/material/Button', giúp hỗ trợ tree-shaking (tối ưu hóa dung lượng code) tốt hơn.
       }
     ],
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': 'warn', // Kiểm tra dependencies của useEffect và các hook khác
     'no-console': 1,
     'no-unused-vars': 1,
     'no-trailing-spaces': 1,

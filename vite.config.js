@@ -26,4 +26,5 @@ export default defineConfig({
     ]
   }
   //thêm nó vào optimizeDeps.include giúp giảm hiện tượng reload hoặc lỗi khi dùng hot reload.
+  //Buộc Vite gom và tối ưu hóa các dependency lớn (như Emotion, Material UI) trước khi server chạy, giúp giảm yêu cầu HTTP, tăng tốc độ tải trang và cải thiện độ ổn định của HMR trong chế độ phát triển.
 })

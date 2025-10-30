@@ -5,6 +5,7 @@ import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import { useColorScheme } from '@mui/material/styles'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import Box from '@mui/material/Box';
+//Tài liệu tham khảo https://mui.com/material-ui/customization/css-theme-variables/configuration/#toggling-dark-mode-manually
 function ModeSelect() {
   const { mode, setMode } = useColorScheme();
   const handleChange = (event) => {

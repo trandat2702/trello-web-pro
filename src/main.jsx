@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* CssVarsProvider = "gốc theme" cho tất cả những j ở trong nó */}
+    {/* CssVarsProvider = "gốc theme" cho tất cả những j ở trong nó  https://v5.mui.com/material-ui/experimental-api/css-theme-variables/migration/*/}
     <CssVarsProvider theme={theme}>
       {/* reset CSS mặc định của browser để đồng bộ giao diện */}
       <CssBaseline />
