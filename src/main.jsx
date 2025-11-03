@@ -7,14 +7,24 @@ import theme from './theme.js'
 // cấu hình react-toastify
 import { ToastContainer, toast } from 'react-toastify'
 
+//Cấu hình cho material-ui-confirm
+import { ConfirmProvider } from 'material-ui-confirm'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     {/* CssVarsProvider = "gốc theme" cho tất cả những j ở trong nó  https://v5.mui.com/material-ui/experimental-api/css-theme-variables/migration/*/}
     <CssVarsProvider theme={theme}>
       {/* reset CSS mặc định của browser để đồng bộ giao diện */}
-      <CssBaseline />
-      <App />
-      <ToastContainer position="bottom-left" theme="colored" />
+      <ConfirmProvider defaultOptions={{
+        dialogProps: { maxWidth: 'sm' },
+        allowClose: false,
+        confirmationButtonProps: { color: 'error' },
+        cancellationButtonProps: { color: 'primary' }
+      }}>
+        <CssBaseline />
+        <App />
+        <ToastContainer position="bottom-left" theme="colored" />
+      </ConfirmProvider>
     </CssVarsProvider>
-  </React.StrictMode>,
+  </React.StrictMode >,
 )

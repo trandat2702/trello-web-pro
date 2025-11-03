@@ -21,11 +21,11 @@ import ContentPaste from '@mui/icons-material/ContentPaste'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import Button from '@mui/material/Button'
 import ListCards from './ListCards/ListCards'
-import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
+import { useConfirm } from "material-ui-confirm";
 import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'react-toastify'
-function Column({ column, createNewCard }) {
+function Column({ column, createNewCard, deleteColumnDetails }) {
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -57,12 +57,13 @@ function Column({ column, createNewCard }) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  //Card đã được sắp xếp theo thứ tự từ file cha to nhất
+  const orderedCards = column.cards
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!newCardTitle) {
       toast.error('Card title is required', { position: "bottom-right" })
       return
@@ -73,11 +74,31 @@ function Column({ column, createNewCard }) {
       columnId: column._id
     }
     //Gọi API tạo Column mới
-    await createNewCard(newCardData)
-    console.log('Add new card:', newCardTitle)
+    createNewCard(newCardData)
     //Đóng trạng thái thêm Column mới và Clear input
     toggleNewCardForm()
     setNewCardTitle('')
+  }
+
+  //Xử lí xoá 1 column và cards bên trong nó
+  const confirmDeleteColumn = useConfirm();
+  const handleDeleteColumn = () => {
+    confirmDeleteColumn({
+      title: 'Are you sure you want to delete this column?',
+      description: 'Hành động này sẽ xoá vĩnh viễn Column của bạn? Bạn chắc chưa',
+      // dialogProps: { maxWidth: 'sm' },
+      // allowClose: false,
+      // confirmationButtonProps: { color: 'error' },
+      // cancellationButtonProps: { color: 'primary' }
+      confirmationText: 'Delete',
+      cancellationText: 'Cancel',
+      //phải nhập đúng từ khoá mới xoá được
+      // confirmationKeyword: 'quocdatdev'
+    })
+      .then(() => {
+        deleteColumnDetails(column._id)
+      })
+      .catch(() => { });
   }
   return (
     // phải bọc bên ngoài như này thì mới fix bug khi di vào cứ giật giật khi 1 column dài 1 column ngắn
@@ -134,6 +155,7 @@ function Column({ column, createNewCard }) {
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
+              onClick={handleClose}
               slotProps={{
                 list: {
                   'aria-labelledby': 'basic-button-workspaces',
@@ -141,9 +163,19 @@ function Column({ column, createNewCard }) {
               }}
             >
               <Divider />
-              <MenuItem>
+              <MenuItem
+                onClick={toggleNewCardForm}
+                sx={{
+                  '&:hover': {
+                    color: 'success.light',
+                    // phải có khoảng trống giữa . và tên class vì đang css cho component bên trong
+                    '& .add-card-icon':
+                      { color: 'success.light' }
+                  }
+                }}
+              >
                 <ListItemIcon>
-                  <AddCardIcon fontSize="small" />
+                  <AddCardIcon className='add-card-icon' fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Add new card</ListItemText>
               </MenuItem>
@@ -165,9 +197,19 @@ function Column({ column, createNewCard }) {
                 </ListItemIcon>
                 <ListItemText>Paste</ListItemText>
               </MenuItem>
-              <MenuItem>
-                <ListItemIcon><DeleteForeverIcon fontSize="small" /></ListItemIcon>
-                <ListItemText>Remove this column</ListItemText>
+              <MenuItem
+                onClick={handleDeleteColumn}
+                sx={{
+                  '&:hover': {
+                    color: 'warning.dark',
+                    // phải có khoảng trống giữa . và tên class vì đang css cho component bên trong
+                    '& .delete-forever-icon':
+                      { color: 'warning.dark' }
+                  }
+                }}
+              >
+                <ListItemIcon><DeleteForeverIcon className='delete-forever-icon' fontSize="small" /></ListItemIcon>
+                <ListItemText>Delete this column</ListItemText>
               </MenuItem>
               <MenuItem>
                 <ListItemIcon><Cloud fontSize="small" /></ListItemIcon>

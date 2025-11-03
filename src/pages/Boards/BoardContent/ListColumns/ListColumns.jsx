@@ -7,12 +7,12 @@ import Button from '@mui/material/Button'
 import NoteAddIcon from '@mui/icons-material/NoteAdd'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import CloseIcon from '@mui/icons-material/Close'
-function ListColumns({ columns, createNewColumn, createNewCard }) {
+function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const addNewColumn = async () => {
+  const addNewColumn = () => {
     if (!newColumnTitle) {
       toast.error('Column title is required')
       return
@@ -22,7 +22,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
       title: newColumnTitle
     }
     //Gọi API tạo Column mới
-    await createNewColumn(newcolumnData)
+    createNewColumn(newcolumnData)
     //Đóng trạng thái thêm Column mới và Clear input
     toggleNewColumnForm()
     setNewColumnTitle('')
@@ -43,7 +43,11 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
         overflowY: 'hidden',
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
-        {columns?.map(column => (<Column key={column._id} column={column} createNewCard={createNewCard} />))}
+        {columns?.map(column => (<Column
+          key={column._id}
+          column={column}
+          createNewCard={createNewCard}
+          deleteColumnDetails={deleteColumnDetails} />))}
         {/* Box add new column */}
         {!openNewColumnForm
           ?
