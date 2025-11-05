@@ -18,3 +18,32 @@
 * "eslint-plugin-react-hooks": "^4.6.0"
 * "eslint-plugin-react-refresh": "^0.3.4"
 ```
+
+---
+
+## Unified Project Documentation
+
+Tài liệu hợp nhất (ASCII data flow, bảng endpoint có ví dụ, hướng dẫn chạy cả API và Web) đã được lưu tại:
+
+- d:\Workspace\trello-api\README.md
+
+Nếu bạn đang ở thư mục `trello-web/`, hãy mở file trên để xem toàn bộ báo cáo và hướng dẫn onboarding nhanh.
+
+### Chạy nhanh
+
+Backend (API):
+
+```powershell
+cd d:\Workspace\trello-api
+yarn install
+yarn dev
+```
+
+Frontend (Web):
+
+```powershell
+cd d:\Workspace\trello-web
+yarn install
+yarn dev
+```
+

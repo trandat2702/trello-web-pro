@@ -1,5 +1,6 @@
 // export const API_ROOT = 'http://localhost:8017'
-//https://github.com/vitejs/vite/issues/1973
+
+
 let apiRoot = ''
 if (process.env.BUILD_MODE === 'dev') {
   apiRoot = 'http://localhost:8017'
