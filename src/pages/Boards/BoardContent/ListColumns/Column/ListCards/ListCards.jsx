@@ -1,7 +1,7 @@
-import React from 'react'
+
 import Box from '@mui/material/Box'
 import Card from './Card/Card'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
 function ListCards({ cards }) {
   return (
@@ -22,7 +22,7 @@ function ListCards({ cards }) {
               borderRadius: '8px'
             },
             '&::-webkit-scrollbar-thumb:hover': {
-              backgroundColor: '#bfc2cf',
+              backgroundColor: '#bfc2cf'
             }
           }}
         >

@@ -1,11 +1,11 @@
-import React from 'react'
+
 import { Card as MuiCard } from '@mui/material'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import GroupIcon from '@mui/icons-material/Group'
 import ModeCommentIcon from '@mui/icons-material/ModeComment'
-import AttachmentIcon from '@mui/icons-material/Attachment';
+import AttachmentIcon from '@mui/icons-material/Attachment'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { useSortable } from '@dnd-kit/sortable'
@@ -14,7 +14,7 @@ function Card({ card }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
     data: { ...card }
-  });
+  })
   // console.log({ card })
   const dndKitCardStyles = {
     // touchAction: 'none',
@@ -24,7 +24,7 @@ function Card({ card }) {
     transition,
     opacity: isDragging ? 0.5 : undefined,
     border: isDragging ? '2px solid #2ecc71' : undefined
-  };
+  }
 
   const shouldShowCardAction = () => {
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length

@@ -102,7 +102,7 @@ function AppBar() {
               },
               '&.Mui-focused fieldset': {
                 borderColor: 'white'
-              },
+              }
             }
           }} />
         <ModeSelect />

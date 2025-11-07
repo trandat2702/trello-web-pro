@@ -3,20 +3,20 @@ import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import React from 'react'
-import Divider from '@mui/material/Divider';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import Avatar from '@mui/material/Avatar'
 import { Logout, PersonAdd, Settings } from '@mui/icons-material'
 import { IconButton, Tooltip } from '@mui/material'
 function Profiles() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const open = Boolean(anchorEl)
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
   return (
     <Box>
       <Tooltip title="Profile">
@@ -40,8 +40,8 @@ function Profiles() {
         onClose={handleClose}
         slotProps={{
           list: {
-            'aria-labelledby': 'basic-button-profiles',
-          },
+            'aria-labelledby': 'basic-button-profiles'
+          }
         }}
       >
         <MenuItem >

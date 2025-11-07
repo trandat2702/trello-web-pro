@@ -9,39 +9,48 @@ module.exports = {
   extends: [
     'eslint:recommended', // tìm các lỗi phổ biến trong JavaScript
     'plugin:react/recommended', // tuân theo các quy tắc tốt nhất của React 
+    'plugin:react/jsx-runtime', // hỗ trợ JSX tự động mà không cần import React
     'plugin:react-hooks/recommended' // tuân theo các quy tắc tốt nhất của React Hooks
   ],
   plugins: [
     'react',
-    'react-hooks'
+    'react-hooks',
+    'react-refresh'
   ],
-  parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module' // cho phép sử dụng import/export
-  },
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+  settings: { react: { version: '18.2' } },
   rules: {
-    "no-restricted-imports": [
-      "error",
+    // React
+    'react-refresh/only-export-components': 'warn',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'react/prop-types': 0,
+    'react/display-name': 0,
+
+    // MUI
+    'no-restricted-imports': [
+      'error',
       {
-        "patterns": [{ "regex": "^@mui/[^/]+$" }] // Ngăn chặn import kiểu import Component from '@mui/material' (gọi là default import từ package gốc). Mục đích là để buộc bạn dùng named import từ đường dẫn đầy đủ, ví dụ: import Button from '@mui/material/Button', giúp hỗ trợ tree-shaking (tối ưu hóa dung lượng code) tốt hơn.
+        'patterns': ['@mui/*/*/*']
       }
     ],
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn', // Kiểm tra dependencies của useEffect và các hook khác
+
+    // Common
     'no-console': 1,
+    'no-extra-boolean-cast': 0,
+    'no-lonely-if': 1,
     'no-unused-vars': 1,
     'no-trailing-spaces': 1,
     'no-multi-spaces': 1,
     'no-multiple-empty-lines': 1,
     'space-before-blocks': ['error', 'always'],
     'object-curly-spacing': [1, 'always'],
-    indent: ['warn', 2],
+    'indent': ['warn', 2],
+    'semi': [1, 'never'],
+    'quotes': ['error', 'single'],
+    'array-bracket-spacing': 1,
     'linebreak-style': 0,
-    semi: [1, 'never'],
-    quotes: ['error', 'single'],
     'no-unexpected-multiline': 'warn',
-    'react/prop-types': 0,
-    'react/display-name': 0,
     'keyword-spacing': 1,
     'comma-dangle': 1,
     'comma-spacing': 1,

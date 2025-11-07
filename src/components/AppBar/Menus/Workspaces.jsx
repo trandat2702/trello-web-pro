@@ -14,14 +14,14 @@ import ContentPaste from '@mui/icons-material/ContentPaste'
 import Cloud from '@mui/icons-material/Cloud'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 function Workspaces() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const open = Boolean(anchorEl)
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
   return (
     <Box>
       <Button
@@ -42,8 +42,8 @@ function Workspaces() {
         onClose={handleClose}
         slotProps={{
           list: {
-            'aria-labelledby': 'basic-button-workspaces',
-          },
+            'aria-labelledby': 'basic-button-workspaces'
+          }
         }}
       >
         <MenuItem>

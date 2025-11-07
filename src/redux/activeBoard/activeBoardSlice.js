@@ -13,11 +13,10 @@ const initialState = {
 //createAsyncThunk đi kèm với extraReducers
 //https://redux-toolkit.js.org/api/createAsyncThunk
 export const fetchBoardDetailsAPI = createAsyncThunk(
-  'activeBoard/fetchBoardDetailsAPI',
-  async (boardId, thunkAPI) => {
-    const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
-    // lưu ý :axios trả về kết quả trong thuộc tính data
-    return response.data
+  'activeBoard/fetchBoardDetailsAPI', // tên action type
+  async (boardId) => {
+    const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`) //hàm thực thi gọi api
+    return response.data //Dữ liệu trả về sẽ được chuyển vào action.payload bên trong extraReducers
   }
 )
 

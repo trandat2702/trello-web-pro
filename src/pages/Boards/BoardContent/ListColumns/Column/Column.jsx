@@ -1,5 +1,4 @@
 
-import React from 'react'
 import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
@@ -22,15 +21,20 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 import Button from '@mui/material/Button'
 import ListCards from './ListCards/ListCards'
 import { useSortable } from '@dnd-kit/sortable'
-import { useConfirm } from "material-ui-confirm";
+import { useConfirm } from 'material-ui-confirm'
 import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'react-toastify'
-function Column({ column, createNewCard, deleteColumnDetails }) {
-
+import { createNewCardAPI, deleteColumnDetailsAPI } from '~/apis'
+import { cloneDeep } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+function Column({ column }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
-  });
+  })
 
   const dndKitColumnStyles = {
     // touchAction: 'none',
@@ -38,14 +42,14 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
     //https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
     transition,
-    // Chiều cao phải luôn max 100% vì nếu không sẽ lỗi khi kéo column 
-    // ngắn qua một column dài thì phải kéo ở khu vực giữa rất khó chịu 
-    // .Lưu ý lúc này phải kết hợp với {...listeners} ở Box bên dưới chứ 
+    // Chiều cao phải luôn max 100% vì nếu không sẽ lỗi khi kéo column
+    // ngắn qua một column dài thì phải kéo ở khu vực giữa rất khó chịu
+    // .Lưu ý lúc này phải kết hợp với {...listeners} ở Box bên dưới chứ
     // không phải ở div ngoài cùng để tránh trường hợp kéo vào vùng xanh
     height: '100%',
     // khi kéo thả thì column sẽ mờ đi
     opacity: isDragging ? 0.5 : undefined
-  };
+  }
 
 
   // State for menu
@@ -63,9 +67,9 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   const toggleNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
-      toast.error('Card title is required', { position: "bottom-right" })
+      toast.error('Card title is required', { position: 'bottom-right' })
       return
     }
     //Tạo dữ liệu Column để gọi API
@@ -73,15 +77,29 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       title: newCardTitle,
       columnId: column._id
     }
-    //Gọi API tạo Column mới
-    createNewCard(newCardData)
+    //Func này có nhiệm cụ gọi API tạo mới Card và làm lại dữ liệu State Board
+    const createdCard = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id
+    })
+    //Tương tự createNewColumn ở trên
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+    const columntoUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    if (columntoUpdate) {
+      columntoUpdate.cards.push(createdCard)
+      columntoUpdate.cardOrderIds.push(createdCard._id)
+    }
+    // setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
+
     //Đóng trạng thái thêm Column mới và Clear input
     toggleNewCardForm()
     setNewCardTitle('')
   }
 
   //Xử lí xoá 1 column và cards bên trong nó
-  const confirmDeleteColumn = useConfirm();
+  const confirmDeleteColumn = useConfirm()
   const handleDeleteColumn = () => {
     confirmDeleteColumn({
       title: 'Are you sure you want to delete this column?',
@@ -91,14 +109,25 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       // confirmationButtonProps: { color: 'error' },
       // cancellationButtonProps: { color: 'primary' }
       confirmationText: 'Delete',
-      cancellationText: 'Cancel',
+      cancellationText: 'Cancel'
       //phải nhập đúng từ khoá mới xoá được
       // confirmationKeyword: 'quocdatdev'
     })
       .then(() => {
-        deleteColumnDetails(column._id)
+        //Cập nhập lại dữ liệu trên giao diện
+        const newBoard = { ...board }
+        newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
+        newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== column._id)
+        // setBoard(newBoard)
+        dispatch(updateCurrentActiveBoard(newBoard))
+
+        //Xử lý xoá một Column và Cards bên trong nó
+        //Link tham khảo https://www.mongodb.com/docs/drivers/node/current/crud/delete/
+        deleteColumnDetailsAPI(column._id).then(() => {
+          toast.success('Delete column successfully', { position: 'bottom-right' })
+        })
       })
-      .catch(() => { });
+      .catch(() => { })
   }
   return (
     // phải bọc bên ngoài như này thì mới fix bug khi di vào cứ giật giật khi 1 column dài 1 column ngắn
@@ -107,7 +136,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       {...attributes}
     >
       <Box
-        // để trong này để chỉ nhấn vào box thì mới kéo thả được 
+        // để trong này để chỉ nhấn vào box thì mới kéo thả được
         {...listeners}
         sx={{
           minWidth: '300px',
@@ -116,7 +145,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
           ml: 2,
           borderRadius: '6px',
           height: 'fit-content',
-          maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`,
+          maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`
         }}
       >
         {/* Box Column Header */}
@@ -158,8 +187,8 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
               onClick={handleClose}
               slotProps={{
                 list: {
-                  'aria-labelledby': 'basic-button-workspaces',
-                },
+                  'aria-labelledby': 'basic-button-workspaces'
+                }
               }}
             >
               <Divider />
@@ -224,7 +253,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
         <Box
           sx={{
             height: (theme) => theme.trello.columnFooterHeight,
-            p: 2,
+            p: 2
           }}
         >
           {!openNewCardForm
@@ -241,7 +270,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
                   width: '100%',
                   justifyContent: 'flex-start',
                   pl: 2.5,
-                  py: 1,
+                  py: 1
                 }}
               >Add new card</Button>
               <Tooltip title="Drag to move">

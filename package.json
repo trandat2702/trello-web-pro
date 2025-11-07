@@ -42,6 +42,7 @@
     "eslint-plugin-react-refresh": "^0.3.4",
     "prettier": "^3.6.2",
     "vite": "^4.3.2",
+    "vite-plugin-checker": "^0.11.0",
     "vite-plugin-svgr": "^3.3.0"
   },
   "packageManager": "yarn@4.10.3+sha256.cd71753d68307301d21034efaf20bd8eee81f9450af75f068477bf9011bb9ad4"

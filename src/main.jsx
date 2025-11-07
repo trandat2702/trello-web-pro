@@ -1,11 +1,10 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline'
 import App from '~/App.jsx'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import theme from './theme.js'
 // cấu hình react-toastify
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 //Cấu hình cho material-ui-confirm
 import { ConfirmProvider } from 'material-ui-confirm'
 //Cấu hình Redux Store
@@ -28,5 +27,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <ToastContainer position="bottom-left" theme="colored" />
       </ConfirmProvider>
     </CssVarsProvider>
-  </Provider >,
+  </Provider >
 )

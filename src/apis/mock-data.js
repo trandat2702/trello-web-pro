@@ -57,8 +57,8 @@ export const mockData = {
       },
       {
         //Cách xử lý bug logic thư viện dnd-kit khi column là rỗng
-        //Phía FE sẽ tự tạo ra một cái card đặc biệt :Placeholder Card ,không liên quan đến Back-end 
-        //Card đặc biệt này sẽ được ẩn ở giao diện UI người dùng 
+        //Phía FE sẽ tự tạo ra một cái card đặc biệt :Placeholder Card ,không liên quan đến Back-end
+        //Card đặc biệt này sẽ được ẩn ở giao diện UI người dùng
         //Cấu trúc ID cả card này để Unique rất đơn giản , không cần phải random phức tạp:
         //"columnId-placeholder-card (mỗi column chỉ có thể có tối đa một cái Placeholder Card)"
         //Quan trọng khi tạo phải đầy đủ (_id,boardId,columnId,FE_PlaceholderCard)

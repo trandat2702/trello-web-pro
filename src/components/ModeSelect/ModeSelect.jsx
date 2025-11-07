@@ -1,16 +1,16 @@
 
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
 import { useColorScheme } from '@mui/material/styles'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box'
 //Tài liệu tham khảo https://mui.com/material-ui/customization/css-theme-variables/configuration/#toggling-dark-mode-manually
 function ModeSelect() {
-  const { mode, setMode } = useColorScheme();
+  const { mode, setMode } = useColorScheme()
   const handleChange = (event) => {
-    setMode(event.target.value);
-  };
+    setMode(event.target.value)
+  }
 
   return (
     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -63,7 +63,7 @@ function ModeSelect() {
         </MenuItem>
       </Select>
     </FormControl>
-  );
+  )
 }
 
 export default ModeSelect
