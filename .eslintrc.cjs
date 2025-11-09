@@ -2,13 +2,13 @@
 // Sample ESLint config for React project
 module.exports = {
   env: {
-    es6: true,    // cho phép sử dụng cú pháp ES6 như là const, let, v.v.
-    node: true,   // cho phép sử dụng cú pháp Node.js như require, module.exports, v.v.
-    browser: true  // cho phép sử dụng cú pháp trình duyệt như document, window, v.v.
+    es6: true, // cho phép sử dụng cú pháp ES6 như là const, let, v.v.
+    node: true, // cho phép sử dụng cú pháp Node.js như require, module.exports, v.v.
+    browser: true // cho phép sử dụng cú pháp trình duyệt như document, window, v.v.
   },
   extends: [
     'eslint:recommended', // tìm các lỗi phổ biến trong JavaScript
-    'plugin:react/recommended', // tuân theo các quy tắc tốt nhất của React 
+    'plugin:react/recommended', // tuân theo các quy tắc tốt nhất của React
     'plugin:react/jsx-runtime', // hỗ trợ JSX tự động mà không cần import React
     'plugin:react-hooks/recommended' // tuân theo các quy tắc tốt nhất của React Hooks
   ],

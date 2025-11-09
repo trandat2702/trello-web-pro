@@ -10,6 +10,13 @@ export default defineConfig({
   define: {
     'process.env': process.env
   },
+  optimizeDeps: {
+    include: [
+      '@emotion/react',
+      '@emotion/styled',
+      '@mui/material/Tooltip'
+    ]
+  },
   plugins: [
     react(),
     svgr()

@@ -10,14 +10,14 @@ import Typography from '@mui/material/Typography'
 import {
   updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardBetweenDifferentColumnsAPI
 } from '~/apis'
-import { toast } from 'react-toastify'
 import { fetchBoardDetailsAPI, updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 function Board() {
   // const [board, setBoard] = useState(null)
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
-  // disableGutters bỏ đi cái padding mặc định 16px
+  const { boardId } = useParams()
   useEffect(() => {
     //cách không dùng redux
     //     fetchBoardDetailsAPI(boardId).then(board => {
@@ -38,17 +38,17 @@ function Board() {
 
     //   setBoard(board)
     // })
-    const boardId = '68fe4cb8ea8e64741d524430'
+    // const boardId = '68fe4cb8ea8e64741d524430'
     // Call API
     dispatch(fetchBoardDetailsAPI(boardId))
-  }, [dispatch])
+  }, [dispatch, boardId])
   //Func này có nhiệm cụ gọi API và xử lý khi kéo thả Column xong xuôi
   const moveColumn = (dndOrderedColumns) => {
     // Update cho chuẩn dữ liệu state Board trước khi gửi lên backend
     const dndOrderedColumnsIds = dndOrderedColumns.map(column => column._id)
 
-    //Trường hợp này dùng spread operator cũng được vì chúng ta không thao 
-    //tác trực tiếp lên mảng columns bên trong object board, mà ta chỉ gán lại 
+    //Trường hợp này dùng spread operator cũng được vì chúng ta không thao
+    //tác trực tiếp lên mảng columns bên trong object board, mà ta chỉ gán lại
     //toàn bộ giá trị columns và columnOrderIds
     const newBoard = { ...board }
     newBoard.columns = dndOrderedColumns
