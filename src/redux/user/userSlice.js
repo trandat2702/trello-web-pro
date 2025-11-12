@@ -1,0 +1,47 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import authorizedAxiosInstance from '~/utils/authorizeAxios'
+import { API_ROOT } from '~/utils/constants'
+
+
+//Khởi tạo giá trị của một cái Slice trong redux
+const initialState = {
+  currentUser: null
+}
+
+//Các hành động gọi api (bất đồng bộ) và cập nhật dữ liệu vào Redux, dùng
+//createAsyncThunk đi kèm với extraReducers
+//https://redux-toolkit.js.org/api/createAsyncThunk
+export const loginUserAPI = createAsyncThunk(
+  'user/loginUserAPI', // tên action type
+  async (data) => {
+    const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/login`, data) //hàm thực thi gọi api
+    return response.data //Dữ liệu trả về sẽ được chuyển vào action.payload bên trong extraReducers
+  }
+)
+
+//Khởi tạo 1 Slice trong kho lưu trữ - Redux Store
+export const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  //Reducers: Nơi xử lý dữ liệu đồng bộ
+  reducers: {},
+  //Extra Reducers: Nơi xử lý dữ liệu bất đồng bộ từ các hành động gọi api (createAsyncThunk)
+  extraReducers: (builder) => {
+    builder.addCase(loginUserAPI.fulfilled, (state, action) => {
+      //action.payload chính là dữ liệu trả về từ hàm gọi api trong createAsyncThunk
+      const user = action.payload
+      state.currentUser = user
+    })
+  }
+})
+
+//Actions: Là nơi dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhât lại dữ liệu thông qua reducer (chạy đồng bộ)
+//Để ý ở trên thì không thấy properties actions đâu cả , bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên redux tạo tự động theo tên của reducer nhé
+
+// export const { } = userSlice.actions
+
+//Selectors: Là nơi dành cho các components bên dưới gọi để lấy dữ liệu từ trong redux store về sử dụng , dùng đến hook useSelector của react-redux để lấy dữ liệu từ selectors này
+export const selectCurrentUser = (state) => {
+  return state.user.currentUser
+}
+export const userReducer = userSlice.reducer

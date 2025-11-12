@@ -29,7 +29,7 @@ function AccountVerification() {
   if (!Verified) {
     return <PageLoadingSpinner caption="Verifying Account..." />
   }
-  //Cuối cùng nếu không gặp vấn đề gì + verify thành công thì điều hướng trang login cùng giá trị với verifiedEmail 
+  //Cuối cùng nếu không gặp vấn đề gì + verify thành công thì điều hướng trang login cùng giá trị với verifiedEmail
   return <Navigate to={`/login?verifiedEmail=${email}`} />
 }
 
