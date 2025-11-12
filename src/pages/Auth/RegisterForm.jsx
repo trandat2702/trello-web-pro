@@ -1,5 +1,5 @@
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
@@ -11,6 +11,7 @@ import CardActions from '@mui/material/CardActions'
 import TextField from '@mui/material/TextField'
 import Zoom from '@mui/material/Zoom'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import {
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
@@ -19,10 +20,17 @@ import {
   FIELD_REQUIRED_MESSAGE
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { registerUserAPI } from '~/apis'
 function RegisterForm() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm()
+  const navigate = useNavigate()
   const submitRegister = (data) => {
-    console.log('Register data:', data)
+    const { email, password } = data
+    toast.promise(registerUserAPI({ email, password }), {
+      pending: 'Registering your account...',
+    }).then(user => {
+      navigate(`/login?registeredEmail=${user.email}`)
+    })
   }
   return (
     <form onSubmit={handleSubmit(submitRegister)}>
@@ -38,7 +46,7 @@ function RegisterForm() {
             <Avatar sx={{ bgcolor: 'primary.main' }}><TrelloIcon /></Avatar>
           </Box>
           <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', color: theme => theme.palette.grey[500] }}>
-            Author: TrungQuanDev
+            Author: QuocDatDev
           </Box>
           <Box sx={{ padding: '0 1em 1em 1em' }}>
             <Box sx={{ marginTop: '1em' }}>

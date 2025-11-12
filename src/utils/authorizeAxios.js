@@ -11,11 +11,12 @@ authorizedAxiosInstance.defaults.withCredentials = true
 //https://axios-http.com/docs/interceptors
 // Interceptor Request: Can thiệp vào giữa những cái request API
 authorizedAxiosInstance.interceptors.request.use((config) => {
+  //Thực hiện xử lí truóc khi request được gửi đi
   //Kỹ thuật chặn spam click
   interceptorLoadingElements(true)
   return config
 }, (error) => {
-  // Do something with request error
+  // Xử lý lỗi trước khi request được gửi đi
   return Promise.reject(error)
 },
   { synchronous: true, runWhen: () => true }
@@ -36,7 +37,7 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
   //console.log error ra là sẽ thấy cấu trúc data dẫn đến message lỗi như dưới đây
   let errorMessage = error?.message
   if (error.response?.data?.message) {
-    errorMessage = error?.response.data?.message
+    errorMessage = error.response?.data?.message
   }
   //Dùng toastify để hiện thị bất kể mọi mã lỗi lên màn hình - ngoại trừ mã 410 - GONE phục vụ việc tự động refresh lại token
   if (error.response?.status !== 410) {

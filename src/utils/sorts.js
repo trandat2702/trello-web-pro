@@ -21,6 +21,8 @@ export const mapOrder = (originalArray, orderArray, key) => {
 
   return orderedArray
 }
+
+// QUY TẮC ÂM TRƯỚC , DƯƠNG SAU
 // const tasks = [
 //   { id: 'task1', name: 'Thiết kế UI' },
 //   { id: 'task2', name: 'Lập trình Backend' },
