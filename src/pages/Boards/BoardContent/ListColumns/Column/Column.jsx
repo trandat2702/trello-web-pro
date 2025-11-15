@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
@@ -114,20 +113,18 @@ function Column({ column }) {
       // confirmationKeyword: 'quocdatdev'
     })
       .then(() => {
-        //Cập nhập lại dữ liệu trên giao diện
+        // Chỉ xóa khi xác nhận
         const newBoard = { ...board }
         newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
         newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== column._id)
-        // setBoard(newBoard)
         dispatch(updateCurrentActiveBoard(newBoard))
-
-        //Xử lý xoá một Column và Cards bên trong nó
-        //Link tham khảo https://www.mongodb.com/docs/drivers/node/current/crud/delete/
         deleteColumnDetailsAPI(column._id).then(() => {
           toast.success('Delete column successfully', { position: 'bottom-right' })
         })
       })
-      .catch(() => { })
+      .catch(() => {
+        // Không làm gì khi cancel
+      })
   }
   return (
     // phải bọc bên ngoài như này thì mới fix bug khi di vào cứ giật giật khi 1 column dài 1 column ngắn
@@ -184,7 +181,6 @@ function Column({ column }) {
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
-              onClick={handleClose}
               slotProps={{
                 list: {
                   'aria-labelledby': 'basic-button-workspaces'
