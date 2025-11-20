@@ -39,7 +39,10 @@ function Board() {
     // const boardId = '68fe4cb8ea8e64741d524430'
     // Call API
     dispatch(fetchBoardDetailsAPI(boardId))
+    dispatch(fetchBoardDetailsAPI(boardId))
+    dispatch(fetchBoardDetailsAPI(boardId))
   }, [dispatch, boardId])
+
   //Func này có nhiệm cụ gọi API và xử lý khi kéo thả Column xong xuôi
   const moveColumn = (dndOrderedColumns) => {
     // Update cho chuẩn dữ liệu state Board trước khi gửi lên backend

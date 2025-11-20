@@ -21,6 +21,7 @@ function AccountVerification() {
         })
     }
   }, [email, token])
+
   //Nếu url có vấn đề, không tồn tại 1 trong 2 giá trị email hoặc token thì đá ra trang 404 luôn
   if (!email || !token) {
     return <Navigate to="/404" />

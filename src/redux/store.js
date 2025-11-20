@@ -10,13 +10,13 @@ import { userReducer } from './user/userSlice'
  */
 import { combineReducers } from 'redux' // Lưu ý có sẵn redux trong redux-toolkit
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import storage from 'redux-persist/lib/storage' // nó trỏ đến localStorage có thể set,get,xoá trực tiếp
 
 //Cấu hình persist
 const rootPersistConfig = {
   key: 'root', // key của cái persist do chúng ta chỉ định, cứ để mặc định là root
   storage: storage, //Biến storage dùng để lưu trữ trạng thái, ở đây ta dùng localStorage
-  whitelist: ['user'] //định nghĩa các slice không được phép duy trì qua mỗi lần f5 trình duyệt
+  whitelist: ['user'] //định nghĩa các slice được phép duy trì qua mỗi lần f5 trình duyệt
   //balacklist: ['user'] //định nghĩa các slice không được phép duy trì qua mỗi lần f5 trình duyệt
 }
 

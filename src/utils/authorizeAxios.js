@@ -32,81 +32,92 @@ authorizedAxiosInstance.interceptors.request.use((config) => {
 }, (error) => {
   // Xử lý lỗi trước khi request được gửi đi
   return Promise.reject(error)
-},
-  { synchronous: true, runWhen: () => true }
+}
 )
 
-//Khởi tạo một cái promise cho việc gọi api refresh_token
-//Mục đích tạo Promise này để khi nào gọi api refresh_token xong xuôi thì mới retry lại nhiều api bị lỗi trước đó
+// Khởi tạo một cái promise cho việc gọi api refresh_token
+// Mục đích tạo Promise này để khi nào gọi api refresh_token xong xuôi thì mới retry lại nhiều api bị lỗi trước đó.
 let refreshTokenPromise = null
 
-// Interceptor Response: Can thiệp vào giữa những cái response API
+// Interceptor Response: Can thiệp vào giữa những cái response nhận về
 authorizedAxiosInstance.interceptors.response.use((response) => {
-
-  //Kỹ thuật chặn spam click
+  // Kỹ thuật chặn spam click (xem kỹ mô tả ở file formatters chứa function)
   interceptorLoadingElements(false)
+
   return response
 }, (error) => {
-  // Mọi mã http status code nằm ngoài khoảng 200-299 sẽ là error và rơi vào đây
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  /* Mọi mã http status code nằm ngoài khoảng 200 - 299 sẽ là error và rơi vào đây */
 
-  //Kỹ thuật chặn spam click
+  // Kỹ thuật chặn spam click (xem kỹ mô tả ở file formatters chứa function)
   interceptorLoadingElements(false)
 
-  /** Quan trọng: Xử lí Refresh Token tự động */
-  //Trường hợp 1: Nếu như nhận mã 401 từ BE, thì gọi api đăng xuất luôn
+  /** Quan trọng: Xử lý Refresh Token tự động */
+  // Trường hợp 1: Nếu như nhận mã 401 từ BE, thì gọi api đăng xuất luôn
   if (error.response?.status === 401) {
     axiosReduxStore.dispatch(logoutUserAPI(false))
   }
-  //Trường hợp 2: Nếu như nhận mã 310 từ BE, thì sẽ gọi api refresh token để làm mới lại accessToken
-  //Đầu tiên lấy được các request config bị lỗi 401/410 thông qua error.config
+
+  // Trường hợp 2: Nếu như nhận mã 410 từ BE, thì sẽ gọi api refresh token để làm mới lại accessToken
+  // Trường hợp 2 > Bước 1: Đầu tiên lấy được các request API đang bị lỗi thông qua error.config
   const originalRequests = error.config
   // console.log('originalRequests: ', originalRequests)
-  if (error.response?.status === 410 && !originalRequests._retry) {
-    //Gắn thêm một giá trị _retry luôn =true trong khoảng thời gian chờ, đảm bảo việc refresh token này chỉ luôn gọi 1 lần tại 1 thời điểm (nhìn lại điều kiên if ngay phía trên)
-    originalRequests._retry = true
 
-    //Kiểm tra xem nếu chưa có rèfreshTokenPromise thì thực hiện gán việc gọi api refresh_token đồng thời gán vào cho cái refreshTokenPromise
+  // if (error.response?.status === 410 && !originalRequests._retry) {
+  if (error.response?.status === 410 && originalRequests) {
+    // UPDATE THÊM: Có thể bỏ không cần thêm cái _retry giống như nhiều bài hướng dẫn khác trên mạng nữa vì chúng ta đang làm chuẩn với biến refreshTokenPromise ở trên rồi, nếu muốn hiểu rõ hơn thì có thể xem riêng phần này ở bộ JWT trên kênh của mình nhé, Link: https://www.youtube.com/playlist?list=PLP6tw4Zpj-RJwtNw9564QKFf93hWiDnR_
+    // Gán thêm một giá trị _retry luôn = true trong khoảng thời gian chờ, đảm bảo việc refresh token này chỉ luôn gọi 1 lần tại 1 thời điểm (nhìn lại điều kiện if ngay phía trên)
+    // originalRequests._retry = true
+
+    // Trường hợp 2 > Bước 2: Kiểm tra xem nếu chưa có refreshTokenPromise thì thực hiện gán việc gọi api refresh_token đồng thời gán vào cho cái refreshTokenPromise
     if (!refreshTokenPromise) {
       refreshTokenPromise = refreshTokenAPI()
         .then(data => {
-          //đồng thời accessToken đã nằm trong httpOnly cookie (xử lý từ phía BE)
+          /**
+          * Đối với Trường hợp nếu dự án cần lưu accessToken vào localstorage hoặc đâu đó thì sẽ viết thêm code xử lý ở đây.
+          * Hiện tại ở đây không cần làm gì vì đồng thời accessToken đã nằm trong httpOnly cookie (xử lý từ phía BE) sau khi api refreshToken được gọi thành công.
+          */
           return data?.accessToken
         })
         .catch((_error) => {
-          //Nếu nhận được bất kỳ lỗi nào từ api refresh_token thì thực hiện logout user luôn
+          // Nếu nhận bất kỳ lỗi nào từ api refresh token thì cứ logout luôn
           axiosReduxStore.dispatch(logoutUserAPI(false))
+          // Trả về promise reject
           return Promise.reject(_error)
         })
         .finally(() => {
-          //Dù API có ok hay lỗi thì luôn gán lại cái refreshTokenPromise về null để lần sau nếu có lỗi 410 thì sẽ gọi lại api refresh_token
+          // Dù API refresh_token có thành công hay lỗi thì vẫn luôn gán lại cái refreshTokenPromise về null như ban đầu
           refreshTokenPromise = null
         })
-      //Cần return trường hợp refreshTokenPromise chạy thành công và xử lý thêm ở đây:
-      //eslint-disable-next-line no-unused-vars
-      return refreshTokenPromise.then((accessToken) => {
-        /**
-         * Bước 1: Đối với trường hợp nếu dự án cần lưu accessToken vào localstorege hoặc đâu đó thì sẽ viết thêm code xử lý ở đây
-         * Hiện tại ở đây không cần bước 1 này vì chúng ta cần đưa accessToken vào cookie (xử lý từ phía BE) sau khi gọi api refresh_token thành công
-         */
-
-        //Bước 2: Bước Quan trọng: Return lại axios instance của chúng ta kết hợp với originalRequests để gọi lại những api ban đầu bị lỗi
-        return authorizedAxiosInstance(originalRequests)
-      })
     }
 
-    //Xử lý lỗi tập trung phần hiển thị thông báo lỗi trả về từ mọi API ở đây (viết code một lần: Clean Code)
-    //console.log error ra là sẽ thấy cấu trúc data dẫn đến message lỗi như dưới đây
-    let errorMessage = error?.message
-    if (error.response?.data?.message) {
-      errorMessage = error.response?.data?.message
-    }
-    //Dùng toastify để hiện thị bất kể mọi mã lỗi lên màn hình - ngoại trừ mã 410 - GONE phục vụ việc tự động refresh lại token
-    if (error.response?.status !== 410) {
-      toast.error(errorMessage)
-    }
-    return Promise.reject(error)
+    // Trường hợp 2 > Bước 3: Cuối cùng mới return cái refreshTokenPromise trong trường hợp success ở đây
+    // eslint-disable-next-line no-unused-vars
+    return refreshTokenPromise.then(accessToken => {
+      /**
+      * Case 1: Đối với Trường hợp nếu dự án cần lưu accessToken vào localstorage hoặc đâu đó thì sẽ viết thêm code xử lý ở đây.
+      * Hiện tại ở đây không cần bước 1 này vì chúng ta đã đưa accessToken vào cookie (xử lý từ phía BE) sau khi api refreshToken được gọi thành công.
+      */
+
+      // Case 2: Bước Quan trọng: Return lại axios instance của chúng ta kết hợp các originalRequests để gọi lại những api ban đầu bị lỗi
+      return authorizedAxiosInstance(originalRequests)
+    })
+
   }
-}
-)
+
+  // Xử lý tập trung phần hiển thị thông báo lỗi trả về từ mọi API ở đây (viết code một lần: Clean Code)
+  // console.log error ra là sẽ thấy cấu trúc data đẫn tới message lỗi như dưới đây
+  let errorMessage = error?.message
+  if (error.response?.data?.message) {
+    errorMessage = error.response?.data?.message
+  }
+  // Dùng toastify để hiển thị bất kể mọi mã lỗi lên màn hình - Ngoại trừ mã 410 - GONE phục vụ việc tự động refresh lại token.
+  if (error.response?.status !== 410) {
+    toast.error(errorMessage)
+  }
+
+  return Promise.reject(error)
+})
 
 export default authorizedAxiosInstance
