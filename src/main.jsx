@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline'
+import GlobalStyles from '@mui/material/GlobalStyles'
 import App from '~/App.jsx'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import theme from './theme.js'
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       hiển thị cái loading=null (không hiển thị gì),hoàn thành rồi mới render ra giao diện ứng dụng */}
       <PersistGate loading={null} persistor={persistor}>
         {/* CssVarsProvider = "gốc theme" cho tất cả những j ở trong nó  https://v5.mui.com/material-ui/experimental-api/css-theme-variables/migration/*/}
+        <GlobalStyles styles={{ a: { textDecoration: 'none' } }} />
         <CssVarsProvider theme={theme}>
           {/* reset CSS mặc định của browser để đồng bộ giao diện */}
           <ConfirmProvider defaultOptions={{
