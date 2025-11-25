@@ -244,7 +244,7 @@ function Column({ column }) {
           </Box>
         </Box>
         {/* Box List Card */}
-        <ListCards cards={orderedCards} />
+        <ListCards cards={orderedCards} columnId={column._id} />
         {/* Box Column Footer */}
         <Box
           sx={{

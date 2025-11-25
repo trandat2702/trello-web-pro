@@ -43,6 +43,7 @@ export const activeBoardSlice = createSlice({
       const board = action.payload
       //Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuống bên dưới các component con
       board.columns = mapOrder(board.columns, board.columnOrderIds, '_id')
+
       //Sắp xếp thứ tự các card trong từng column trước khi đưa dữ liệu xuống bên dưới các component con
       board.columns.forEach(column => {
         column.cards = mapOrder(column.cards, column.cardOrderIds, '_id')

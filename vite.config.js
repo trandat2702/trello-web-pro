@@ -14,18 +14,19 @@ export default defineConfig({
     include: [
       '@emotion/react',
       '@emotion/styled',
+      '@mui/material',
+      '@mui/system',
       '@mui/material/Tooltip'
     ]
   },
   plugins: [
-    react(),
+    react({
+      jsxImportSource: '@emotion/react',
+      babel: {
+        plugins: ['@emotion/babel-plugin']
+      }
+    }),
     svgr()
-    // checker({
-    //   eslint: {
-    //     // Lint tất cả file js/jsx trong src và coi cả warning là lỗi để hiển thị overlay ngay
-    //     lintCommand: 'eslint "./src/**/*.{js,jsx}" --report-unused-disable-directives --max-warnings 0'
-    //   }
-    // })
   ],
   // base: './'
   resolve: {
@@ -33,4 +34,13 @@ export default defineConfig({
       { find: '~', replacement: '/src' }
     ]
   }
+  // ,
+  // ssr: {
+  //   noExternal: [
+  //     '@emotion/react',
+  //     '@emotion/styled',
+  //     '@mui/material',
+  //     '@mui/system'
+  //   ]
+  // }
 })

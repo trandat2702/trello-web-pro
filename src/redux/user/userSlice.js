@@ -37,8 +37,8 @@ export const updateUserAPI = createAsyncThunk(
   async (data) => {
     const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/users/update`, data)
     return response.data
-
   })
+
 //Khởi tạo 1 Slice trong kho lưu trữ - Redux Store
 export const userSlice = createSlice({
   name: 'user',

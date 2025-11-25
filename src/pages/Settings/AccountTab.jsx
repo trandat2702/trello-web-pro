@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles'
+import styled from '@emotion/styled'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
@@ -66,7 +66,7 @@ function AccountTab() {
 
   const uploadAvatar = (e) => {
     // Lấy file thông qua e.target?.files[0] và validate nó trước khi xử lý
-    // console.log('e.target?.files[0]: ', e.target?.files[0])
+    // console.log('e.target?.files[0]: ', e.target.files[0])
     const error = singleFileValidator(e.target?.files[0])
     if (error) {
       toast.error(error)
@@ -78,11 +78,21 @@ function AccountTab() {
     reqData.append('avatar', e.target?.files[0])
     // Cách để log được dữ liệu thông qua FormData
     // console.log('reqData: ', reqData)
-    for (const value of reqData.values()) {
-      // console.log('reqData Value: ', value)
-    }
+    // for (const value of reqData.values()) {
+    //   console.log('reqData Value: ', value)
+    // }
 
     // Gọi API...
+    toast.promise(dispatch(updateUserAPI(reqData)), {
+      pending: 'Updating...'
+    }).then(res => {
+      //Đoạn này phải kiểm tra không có lỗi (update thành công) thì mới điều hướng về /
+      if (!res.error) {
+        toast.success('Account information updated successfully!')
+      }
+      // Lưu ý, đủ có lỗi hoặc thành công thì cũng phải clear giá trị của file input, nếu không thì sẽ không thể chọn cùng 1 file liên tiếp được
+      e.target.value = ''
+    })
   }
 
   return (
@@ -105,7 +115,7 @@ function AccountTab() {
           <Box>
             <Avatar
               sx={{ width: 84, height: 84, mb: 1 }}
-              alt="TrungQuanDev"
+              alt="QuocDatDev"
               src={currentUser?.avatar}
             />
             <Tooltip title="Upload a new image to update your avatar immediately.">
