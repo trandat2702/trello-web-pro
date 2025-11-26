@@ -49,17 +49,24 @@ function Boards() {
 
   // Xử lý phân trang từ url với MUI: https://mui.com/material-ui/react-pagination/#router-integration
   const location = useLocation()
+
+
   /**
    * Parse chuỗi string search trong location về đối tượng URLSearchParams trong JavaScript
    * https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
    */
   const query = new URLSearchParams(location.search)
-  console.log('Query params:', location.search)
+  // console.log(Object.fromEntries(query))
   /**
    * Lấy giá trị page từ query, default sẽ là 1 nếu không tồn tại page từ url.
    * Nhắc lại kiến thức cơ bản hàm parseInt cần tham số thứ 2 là Hệ thập phân (hệ đếm cơ số 10) để đảm bảo chuẩn số cho phân trang
    */
   const page = parseInt(query.get('page') || '1', 10)
+
+  const updateStateData = (res) => {
+    setBoards(res.boards || [])
+    setTotalBoards(res.totalBoards || 0)
+  }
 
   useEffect(() => {
     // Fake tạm 16 cái item thay cho boards
@@ -70,12 +77,13 @@ function Boards() {
 
     //Mỗi khi cái url thay đổi ví dụ như chúng ta chuyển trang, thì cái location.search lấy từ hook useLocation của react-router-dom cũng thay đổi theo, đồng nghữa hàm useEffect này sẽ được gọi lạivà fetch lại API theo đúng page mới vì cái localtion.search đã nằm trong dependency của useEffect
     // Gọi API lấy danh sách boards ở đây...
-    fetchBoardsAPI(location.search).then(res => {
-      setBoards(res.boards || [])
-      setTotalBoards(res.totalBoards || 0)
-    })
+    fetchBoardsAPI(location.search).then(updateStateData)
   }, [location.search])
 
+  const afterCreateNewBoard = () => {
+    //Đơn giản là cứ fetch lại danh sách boards tương tự như trong useEffect bên trên
+    fetchBoardsAPI(location.search).then(updateStateData)
+  }
   // Lúc chưa tồn tại boards > đang chờ gọi api thì hiện loading
   if (!boards) {
     return <PageLoadingSpinner caption="Loading Boards..." />
@@ -103,7 +111,7 @@ function Boards() {
             </Stack>
             <Divider sx={{ my: 1 }} />
             <Stack direction="column" spacing={1}>
-              <SidebarCreateBoardModal />
+              <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard} />
             </Stack>
           </Grid>
 
@@ -168,13 +176,13 @@ function Boards() {
                   // Giá trị của page hiện tại đang đứng
                   page={page}
                   // Render các page item và đồng thời cũng là những cái link để chúng ta click chuyển trang
-                  renderItem={(item) => (
-                    <PaginationItem
+                  renderItem={(item) => {
+                    return <PaginationItem
                       component={Link}
                       to={`/boards${item.page === DEFAULT_PAGE ? '' : `?page=${item.page}`}`}
                       {...item}
                     />
-                  )}
+                  }}
                 />
               </Box>
             }

@@ -6,7 +6,6 @@ import Divider from '@mui/material/Divider'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import Typography from '@mui/material/Typography'
 import Cloud from '@mui/icons-material/Cloud'
 import TextField from '@mui/material/TextField'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -23,10 +22,11 @@ import { useSortable } from '@dnd-kit/sortable'
 import { useConfirm } from 'material-ui-confirm'
 import { CSS } from '@dnd-kit/utilities'
 import { toast } from 'react-toastify'
-import { createNewCardAPI, deleteColumnDetailsAPI } from '~/apis'
+import { createNewCardAPI, deleteColumnDetailsAPI, updateColumnDetailsAPI } from '~/apis'
 import { cloneDeep } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 function Column({ column }) {
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
@@ -126,6 +126,20 @@ function Column({ column }) {
         // Không làm gì khi cancel
       })
   }
+
+  const onUpdateColumnTitle = (newTitle) => {
+    // console.log("🚀 ~ onUpdateColumnTitle ~ newTitle:", newTitle)
+    //Gọi API cập nhật Column và xử lý dữ liệu board trong redux
+    updateColumnDetailsAPI(column._id, { title: newTitle }).then(() => {
+      const newBoard = cloneDeep(board)
+      const columnToUpdate = newBoard.columns.find(c => c._id === column._id)
+      if (columnToUpdate) {
+        columnToUpdate.title = newTitle
+      }
+      // setBoard(newBoard)
+      dispatch(updateCurrentActiveBoard(newBoard))
+    })
+  }
   return (
     // phải bọc bên ngoài như này thì mới fix bug khi di vào cứ giật giật khi 1 column dài 1 column ngắn
     <div ref={setNodeRef}
@@ -155,16 +169,11 @@ function Column({ column }) {
             justifyContent: 'space-between'
           }}
         >
-          <Typography
-            variant='h6'
-            sx={{
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              cursor: 'pointer'
-            }}
-          >
-            {column?.title}
-          </Typography>
+          <ToggleFocusInput
+            value={column?.title}
+            onChangedValue={onUpdateColumnTitle}
+            data-no-dnd="true"
+          />
           <Box>
             <Tooltip title="More options">
               <ExpandMoreIcon

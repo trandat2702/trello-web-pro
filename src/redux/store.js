@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { activeBoardReducer } from './activeBoard/activeBoardSlice'
 import { userReducer } from './user/userSlice'
-
+import { activeCardReducer } from './activeCard/activeCardSlice'
 /**
  * Cấu hình redux-persist để lưu trữ trạng thái của ứng dụng trong localStorage
  * https://www.npmjs.com/package/redux-persist
@@ -23,7 +23,8 @@ const rootPersistConfig = {
 //Combine các reducers trong dự án
 const reducers = combineReducers({
   activeBoard: activeBoardReducer,
-  user: userReducer
+  user: userReducer,
+  activeCard: activeCardReducer
 })
 
 //Thực hiện persist Reducer

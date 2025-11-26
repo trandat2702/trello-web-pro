@@ -1,6 +1,4 @@
 
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
@@ -12,6 +10,7 @@ import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import BoardUserGroup from './BoardUserGroup'
 const MENU_STYLES = {
   color: 'white',
   backgroundColor: 'transparent',
@@ -81,41 +80,9 @@ function BoardBar({ board }) {
             '&:hover': { borderColor: 'white' }
           }}
         >Invite</Button>
-        <AvatarGroup max={3}
-          sx={{
-            gap: '10px',
-            '& .MuiAvatar-root': {
-              width: 34,
-              height: 34,
-              fontSize: 16,
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              '&:first-of-type': { bgcolor: '#a4b0de' }// css cho phần tử đầu avata
-            }
-          }}
-        >
-          <Tooltip title="quocdatdev">
-            <Avatar
-              alt="Dat"
-              src='https://imgs.search.brave.com/UFkmy5e0OMJbuC5PRZe-o069X8VGBF-qhM-cNe_TIJI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9oYXlj/YWZlLnZuL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIyLzExL2hp/bmgtYW5oLTEyLWNv/bi1naWFwLWN1dGUt/M0QtY29uLWtoaS10/dW9pLVRoYW4uanBn' />
-          </Tooltip>
-          <Tooltip title="quocdatdev">
-            <Avatar
-              alt="Dat"
-              src='https://imgs.search.brave.com/UFkmy5e0OMJbuC5PRZe-o069X8VGBF-qhM-cNe_TIJI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9oYXlj/YWZlLnZuL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIyLzExL2hp/bmgtYW5oLTEyLWNv/bi1naWFwLWN1dGUt/M0QtY29uLWtoaS10/dW9pLVRoYW4uanBn' />
-          </Tooltip>
-          <Tooltip title="quocdatdev">
-            <Avatar
-              alt="Dat"
-              src='https://imgs.search.brave.com/UFkmy5e0OMJbuC5PRZe-o069X8VGBF-qhM-cNe_TIJI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9oYXlj/YWZlLnZuL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIyLzExL2hp/bmgtYW5oLTEyLWNv/bi1naWFwLWN1dGUt/M0QtY29uLWtoaS10/dW9pLVRoYW4uanBn' />
-          </Tooltip>
-          <Tooltip title="quocdatdev">
-            <Avatar
-              alt="Dat"
-              src='https://imgs.search.brave.com/UFkmy5e0OMJbuC5PRZe-o069X8VGBF-qhM-cNe_TIJI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9oYXlj/YWZlLnZuL3dwLWNv/bnRlbnQvdXBsb2Fk/cy8yMDIyLzExL2hp/bmgtYW5oLTEyLWNv/bi1naWFwLWN1dGUt/M0QtY29uLWtoaS10/dW9pLVRoYW4uanBn' />
-          </Tooltip>
-        </AvatarGroup>
+
+        {/* Xử lí hiện thi danh sách thành viên của Board */}
+        <BoardUserGroup board={board} />
       </Box>
     </Box>
   )

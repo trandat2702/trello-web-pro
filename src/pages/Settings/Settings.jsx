@@ -20,6 +20,7 @@ const TABS = {
 
 function Settings() {
   const location = useLocation()
+
   // Function đơn giản có nhiệm vụ lấy ra cái tab mặc định dựa theo url.
   const getDefaultTab = () => {
     if (location.pathname.includes(TABS.SECURITY)) return TABS.SECURITY
