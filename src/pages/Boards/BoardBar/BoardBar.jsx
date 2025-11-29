@@ -1,6 +1,5 @@
 
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import DashboardIcon from '@mui/icons-material/Dashboard'
@@ -8,9 +7,9 @@ import VpnLockIcon from '@mui/icons-material/VpnLock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 const MENU_STYLES = {
   color: 'white',
   backgroundColor: 'transparent',
@@ -73,16 +72,11 @@ function BoardBar({ board }) {
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Button variant="outlined" startIcon={<PersonAddIcon />}
-          sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': { borderColor: 'white' }
-          }}
-        >Invite</Button>
+        {/* Xử lí mời user vào làm thành viên của Board */}
+        <InviteBoardUser boardId={board?._id} />
 
         {/* Xử lí hiện thi danh sách thành viên của Board */}
-        <BoardUserGroup board={board} />
+        <BoardUserGroup boardUsers={board?.FE_allUsers} />
       </Box>
     </Box>
   )

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
@@ -32,9 +32,10 @@ import CardUserGroup from './CardUserGroup'
 import CardDescriptionMdEditor from './CardDescriptionMdEditor'
 import CardActivitySection from './CardActivitySection'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectCurrentActiveCard, clearAndHideCurrentActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+import { selectCurrentActiveCard, clearAndHideCurrentActiveCard, updateCurrentActiveCard, selectIsShowModalActiveCard } from '~/redux/activeCard/activeCardSlice'
 import { styled } from '@mui/material/styles'
 import { updateCardDetailsAPI } from '~/apis'
+import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -61,7 +62,8 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
   const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
-  //Không dùng biến State để check đóng mở Modal nữa vì chúng ta sẽ check bên Boards/_id.jsx
+  const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
+  //Không dùng biến State để check đóng mở Modal nữa vì chúng ta sẽ check bên Boards/_id.jsx isShowModalActiveCard từ Redux
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
@@ -69,20 +71,27 @@ function ActiveCard() {
   }
 
   //Function dùng chung cho các trường hợp cập nhật card title, description, cover,...
-  const callApiUpdateCard = async (updatedCardData) => {
+  const callApiUpdateCard = async (updateData) => {
 
-    const updatedCard = await updateCardDetailsAPI(activeCard._id, updatedCardData)
+    const updatedCard = await updateCardDetailsAPI(activeCard._id, updateData)
     //B1: Cập nhật lại cái card đang active trong modal hiện tại
     dispatch(updateCurrentActiveCard(updatedCard))
     //B2: Cập nhật lại cái bản ghi card trong activeBoard (nested data)
+    dispatch(updateCardInBoard(updatedCard))
+
+    return updatedCard
   }
 
   const onUpdateCardTitle = (newTitle) => {
     callApiUpdateCard({ title: newTitle.trim() })
   }
 
+  const onUpdateCardDescription = (newDescription) => {
+    callApiUpdateCard({ description: newDescription })
+  }
+
   const onUploadCardCover = (event) => {
-    console.log(event.target?.files[0])
+    // console.log(event.target?.files[0])
     const error = singleFileValidator(event.target?.files[0])
     if (error) {
       toast.error(error)
@@ -92,12 +101,22 @@ function ActiveCard() {
     reqData.append('cardCover', event.target?.files[0])
 
     // Gọi API...
+    toast.promise(
+      callApiUpdateCard(reqData).finally(() => {
+        event.target.value = '' // Reset lại giá trị của input file sau khi upload xong
+      }
+      ),
+      { pending: 'Updating....' }
+    )
   }
-
+  //Dùng async await ở đây để component con CardActivitySection chờ và nếu thành công thì mới clear thẻ input comment
+  const onAddCardComment = async (commentToAdd) => {
+    await callApiUpdateCard({ commentToAdd })
+  }
   return (
     <Modal
       disableScrollLock
-      open={true}
+      open={isShowModalActiveCard}
       onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
       sx={{ overflowY: 'auto' }}>
       <Box sx={{
@@ -158,7 +177,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 03: Xử lý mô tả của Card */}
-              <CardDescriptionMdEditor />
+              <CardDescriptionMdEditor
+                carDescriptionProp={activeCard?.description}
+                handleUpdateCardDescription={onUpdateCardDescription}
+              />
             </Box>
 
             <Box sx={{ mb: 3 }}>
@@ -168,7 +190,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
-              <CardActivitySection />
+              <CardActivitySection
+                cardComments={activeCard?.comments}
+                onAddCardComment={onAddCardComment}
+              />
             </Box>
           </Grid>
 

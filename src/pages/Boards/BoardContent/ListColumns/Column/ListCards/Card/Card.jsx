@@ -11,7 +11,7 @@ import Button from '@mui/material/Button'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useDispatch } from 'react-redux'
-import { updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+import { updateCurrentActiveCard, showModalActiveCard } from '~/redux/activeCard/activeCardSlice'
 function Card({ card }) {
   const dispatch = useDispatch()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -36,6 +36,8 @@ function Card({ card }) {
   const setActiveCard = () => {
     // Cập nhật dữ liệu card hiện tại vào trong Redux để mở Modal Card chi tiết
     dispatch(updateCurrentActiveCard(card))
+    //Hiện modal lên
+    dispatch(showModalActiveCard())
   }
   return (
     <>

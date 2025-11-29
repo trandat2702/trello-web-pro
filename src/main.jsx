@@ -27,12 +27,12 @@ import { injectStore } from '~/utils/authorizeAxios'
 //Hàm này được gọi thì biến axiosReduxStore trong authorizeAxios.js sẽ có giá trị chính là store của redux
 injectStore(store)
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter basename='/'>
-    <Provider store={store}>
-      {/* Nó sẽ chờ quá trình nạp lại dữ liệu từ localStorage vào redux store hoàn tất
+  <Provider store={store}>
+    {/* Nó sẽ chờ quá trình nạp lại dữ liệu từ localStorage vào redux store hoàn tất
       trước khi render ra giao diện ứng dụng bên trong nếu chưa hoàn tất thì sẽ
       hiển thị cái loading=null (không hiển thị gì),hoàn thành rồi mới render ra giao diện ứng dụng */}
-      <PersistGate loading={null} persistor={persistor}>
+    <PersistGate loading={null} persistor={persistor}>
+      <BrowserRouter basename='/'>
         {/* CssVarsProvider = "gốc theme" cho tất cả những j ở trong nó  https://v5.mui.com/material-ui/experimental-api/css-theme-variables/migration/*/}
         <GlobalStyles styles={{ a: { textDecoration: 'none' } }} />
         <CssVarsProvider theme={theme}>
@@ -48,7 +48,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <ToastContainer position="bottom-left" theme="colored" />
           </ConfirmProvider>
         </CssVarsProvider>
-      </PersistGate>
-    </Provider >
-  </BrowserRouter>
+      </BrowserRouter>
+    </PersistGate>
+  </Provider >
 )
