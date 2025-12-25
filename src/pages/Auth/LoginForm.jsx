@@ -7,11 +7,13 @@ import LockIcon from '@mui/icons-material/Lock'
 import Typography from '@mui/material/Typography'
 import { Card as MuiCard } from '@mui/material'
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
-import CardActions from '@mui/material/CardActions'
+// import CardActions from '@mui/material/CardActions'
 import TextField from '@mui/material/TextField'
 import Zoom from '@mui/material/Zoom'
 import Alert from '@mui/material/Alert'
 import { useForm } from 'react-hook-form'
+import GoogleLoginButton from '~/pages/Auth/GoogleLoginButton'
+import Divider from '@mui/material/Divider'
 import {
   EMAIL_RULE,
   PASSWORD_RULE,
@@ -46,45 +48,77 @@ function LoginForm() {
   return (
     <form onSubmit={handleSubmit(submitLogIn)}>
       <Zoom in={true} style={{ transitionDelay: '200ms' }}>
-        <MuiCard sx={{ minWidth: 380, maxWidth: 380, marginTop: '6em' }}>
+        <MuiCard sx={{
+          minWidth: 380,
+          maxWidth: 420,
+          marginTop: '0',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+          borderRadius: '16px',
+          backdropFilter: 'blur(10px)',
+          backgroundColor: theme => theme.palette.mode === 'dark'
+            ? 'rgba(30, 30, 30, 0.95)'
+            : 'rgba(255, 255, 255, 0.95)'
+        }}>
+          {/* Header */}
           <Box sx={{
-            margin: '1em',
+            padding: '2em 2em 1em 2em',
             display: 'flex',
-            justifyContent: 'center',
-            gap: 1
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 1.5
           }}>
-            <Avatar sx={{ bgcolor: 'primary.main' }}><LockIcon /></Avatar>
-            <Avatar sx={{ bgcolor: 'primary.main' }}><TrelloIcon /></Avatar>
+            <Box sx={{ display: 'flex', gap: 1.5 }}>
+              <Avatar sx={{ bgcolor: 'primary.main', width: 48, height: 48 }}>
+                <LockIcon />
+              </Avatar>
+              <Avatar sx={{ bgcolor: 'primary.main', width: 48, height: 48 }}>
+                <TrelloIcon />
+              </Avatar>
+            </Box>
+            <Typography variant="h5" fontWeight="600" color="text.primary">
+              Đăng Nhập
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Author: QuocDatDev
+            </Typography>
           </Box>
-          <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', color: theme => theme.palette.grey[500] }}>
-            Author: QuocDatDev
-          </Box>
-          <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
-            {verifiedEmail && <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
-              Your email&nbsp;
-              <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{verifiedEmail}</Typography>
-              &nbsp;has been verified.<br />Now you can login to enjoy our services! Have a good day!
-            </Alert>
-            }
 
-            {registeredEmail &&
-              <Alert severity="info" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
-                An email has been sent to&nbsp;
-                <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{registeredEmail}</Typography>
-                <br />Please check and verify your account before logging in!
-              </Alert>
-            }
-          </Box>
-          <Box sx={{ padding: '0 1em 1em 1em' }}>
-            <Box sx={{ marginTop: '1em' }}>
+          {/* Alerts */}
+          {(verifiedEmail || registeredEmail) && (
+            <Box sx={{ padding: '0 2em', mb: 2 }}>
+              {verifiedEmail && (
+                <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+                  Your email&nbsp;
+                  <Typography component="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>
+                    {verifiedEmail}
+                  </Typography>
+                  &nbsp;has been verified.<br />Now you can login to enjoy our services!
+                </Alert>
+              )}
+
+              {registeredEmail && (
+                <Alert severity="info" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+                  An email has been sent to&nbsp;
+                  <Typography component="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>
+                    {registeredEmail}
+                  </Typography>
+                  <br />Please check and verify your account before logging in!
+                </Alert>
+              )}
+            </Box>
+          )}
+
+
+          {/* Email/Password Form */}
+          <Box sx={{ padding: '1em 2em 2em 2em' }}>
+            <Box sx={{ mb: 2 }}>
               <TextField
-                // autoComplete="nope"
-                autoFocus
                 fullWidth
-                label="Enter Email..."
+                label="Email"
                 type="text"
                 variant="outlined"
                 error={!!errors['email']}
+                size="medium"
                 {...register('email', {
                   required: FIELD_REQUIRED_MESSAGE,
                   pattern: {
@@ -95,10 +129,11 @@ function LoginForm() {
               />
               <FieldErrorAlert errors={errors} fieldName={'email'} />
             </Box>
-            <Box sx={{ marginTop: '1em' }}>
+
+            <Box sx={{ mb: 2.5 }}>
               <TextField
                 fullWidth
-                label="Enter Password..."
+                label="Mật khẩu"
                 type="password"
                 variant="outlined"
                 error={!!errors['password']}
@@ -112,8 +147,7 @@ function LoginForm() {
               />
               <FieldErrorAlert errors={errors} fieldName={'password'} />
             </Box>
-          </Box>
-          <CardActions sx={{ padding: '0 1em 1em 1em' }}>
+
             <Button
               className='interceptor-loading'
               type="submit"
@@ -121,14 +155,59 @@ function LoginForm() {
               color="primary"
               size="large"
               fullWidth
+              sx={{
+                py: 1.5,
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+                borderRadius: '8px',
+                boxShadow: '0 4px 12px rgba(25,118,210,0.25)',
+                '&:hover': {
+                  boxShadow: '0 6px 16px rgba(25,118,210,0.35)'
+                }
+              }}
             >
-              Login
+              Đăng nhập
             </Button>
-          </CardActions>
-          <Box sx={{ padding: '0 1em 1em 1em', textAlign: 'center' }}>
-            <Typography>Bạn có muốn đăng ký tài khoản mới không?</Typography>
+          </Box>
+          {/* Divider */}
+          <Box sx={{ padding: '0 2em' }}>
+            <Divider sx={{ my: 1.5 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                HOẶC
+              </Typography>
+            </Divider>
+          </Box>
+          {/* Google Login Button */}
+          <Box sx={{ padding: '0 2em 1em 2em' }}>
+            <GoogleLoginButton />
+          </Box>
+
+
+          {/* Footer */}
+          <Box sx={{
+            padding: '1.5em 2em 2em 2em',
+            textAlign: 'center',
+            backgroundColor: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
+            borderBottomLeftRadius: '16px',
+            borderBottomRightRadius: '16px'
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+              Bạn chưa có tài khoản?
+            </Typography>
             <Link to="/register" style={{ textDecoration: 'none' }}>
-              <Typography sx={{ color: 'primary.main', '&:hover': { color: '#ffbb39' } }}>Create account!</Typography>
+              <Typography
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 600,
+                  '&:hover': {
+                    color: '#ffbb39',
+                    textDecoration: 'underline'
+                  }
+                }}
+              >
+                Đăng ký ngay
+              </Typography>
             </Link>
           </Box>
         </MuiCard>

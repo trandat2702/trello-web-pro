@@ -14,6 +14,7 @@ const theme = extendTheme({
     columnFooterHeight: COLUMN_FOOTER_HEIGHT
   },
   components: {
+    // https://v5.mui.com/material-ui/customization/how-to-customize/#4-global-css-override
     MuiCssBaseline: {
       styleOverrides: {
         body: {

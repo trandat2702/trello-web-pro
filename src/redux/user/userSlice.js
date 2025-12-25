@@ -39,6 +39,14 @@ export const updateUserAPI = createAsyncThunk(
     return response.data
   })
 
+export const loginWithGoogleAPI = createAsyncThunk(
+  'user/loginWithGoogle',
+  async (data) => {
+    const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/google-login`, data)
+    return response.data
+  }
+)
+
 //Khởi tạo 1 Slice trong kho lưu trữ - Redux Store
 export const userSlice = createSlice({
   name: 'user',
@@ -60,6 +68,10 @@ export const userSlice = createSlice({
     builder.addCase(updateUserAPI.fulfilled, (state, action) => {
       const updatedUser = action.payload
       state.currentUser = updatedUser
+    })
+    builder.addCase(loginWithGoogleAPI.fulfilled, (state, action) => {
+      const user = action.payload
+      state.currentUser = user
     })
   }
 })

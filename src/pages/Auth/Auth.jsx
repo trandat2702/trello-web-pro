@@ -22,12 +22,13 @@ function Auth() {
       flexDirection: 'column',
       minHeight: '100vh',
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
       background: 'url("src/assets/auth/login-register-bg.jpg")',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.2)'
+      boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.3)',
+      padding: '2rem 1rem'
     }}>
       {isLogin && <LoginForm />}
       {isRegister && <RegisterForm />}

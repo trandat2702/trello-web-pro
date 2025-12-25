@@ -40,7 +40,7 @@ function AppBar() {
         gap: 2
       }}>
         <Link to="/boards">
-          <Tooltip title="Board List">
+          <Tooltip title="Board List" >
             <AppsIcon sx={{ color: 'white', verticalAlign: 'middle' }} />
           </Tooltip>
         </Link>

@@ -13,6 +13,7 @@ import { logoutUserAPI, selectCurrentUser } from '~/redux/user/userSlice'
 import { useConfirm } from 'material-ui-confirm'
 import { Link } from 'react-router-dom'
 function Profiles() {
+  // tham khảo tài liệu ở https://mui.com/material-ui/react-menu/
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => {

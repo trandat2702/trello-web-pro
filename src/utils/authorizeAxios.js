@@ -64,12 +64,8 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
   const originalRequests = error.config
   // console.log('originalRequests: ', originalRequests)
 
-  // if (error.response?.status === 410 && !originalRequests._retry) {
   if (error.response?.status === 410 && originalRequests) {
     // UPDATE THÊM: Có thể bỏ không cần thêm cái _retry giống như nhiều bài hướng dẫn khác trên mạng nữa vì chúng ta đang làm chuẩn với biến refreshTokenPromise ở trên rồi, nếu muốn hiểu rõ hơn thì có thể xem riêng phần này ở bộ JWT trên kênh của mình nhé, Link: https://www.youtube.com/playlist?list=PLP6tw4Zpj-RJwtNw9564QKFf93hWiDnR_
-    // Gán thêm một giá trị _retry luôn = true trong khoảng thời gian chờ, đảm bảo việc refresh token này chỉ luôn gọi 1 lần tại 1 thời điểm (nhìn lại điều kiện if ngay phía trên)
-    // originalRequests._retry = true
-
     // Trường hợp 2 > Bước 2: Kiểm tra xem nếu chưa có refreshTokenPromise thì thực hiện gán việc gọi api refresh_token đồng thời gán vào cho cái refreshTokenPromise
     if (!refreshTokenPromise) {
       refreshTokenPromise = refreshTokenAPI()
@@ -95,6 +91,9 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
     // Trường hợp 2 > Bước 3: Cuối cùng mới return cái refreshTokenPromise trong trường hợp success ở đây
     // eslint-disable-next-line no-unused-vars
     return refreshTokenPromise.then(accessToken => {
+      // Khi promise resolve (refresh thành công)
+      // → Browser đã có cookie mới
+      // → Gọi lại API ban đầu
       /**
       * Case 1: Đối với Trường hợp nếu dự án cần lưu accessToken vào localstorage hoặc đâu đó thì sẽ viết thêm code xử lý ở đây.
       * Hiện tại ở đây không cần bước 1 này vì chúng ta đã đưa accessToken vào cookie (xử lý từ phía BE) sau khi api refreshToken được gọi thành công.
