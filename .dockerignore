@@ -1,0 +1,45 @@
+# Dependencies - sẽ được cài lại trong container
+node_modules
+npm-debug.log
+# Giữ lại package-lock.json vì npm ci cần nó
+
+# Build output - sẽ được build lại trong container
+dist
+build
+
+# IDE và editor files
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files - KHÔNG copy vào image (chứa thông tin nhạy cảm)
+.env
+.env.*
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Logs
+*.log
+logs/
+
+# Test files
+test/
+tests/
+**/*.test.js
+**/*.test.jsx
+**/*.spec.js
+**/*.spec.jsx
+coverage/
