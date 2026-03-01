@@ -1,8 +1,10 @@
 // Mặc định là production URL (an toàn khi deploy lên Vercel/Render)
 let apiRoot = 'https://trello-api-h1dj.onrender.com'
 
-// Chỉ khi nào BUILD_MODE là 'dev' mới dùng localhost
-if (process.env.VITE_BUILD_MODE === 'dev') {
+// import.meta.env.DEV là biến built-in của Vite:
+// - true khi chạy dev server (npm run dev)
+// - false khi build production (npm run build)
+if (import.meta.env.DEV) {
   apiRoot = 'http://localhost:8017'
 }
 
