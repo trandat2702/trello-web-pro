@@ -27,6 +27,7 @@ import { cloneDeep } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
+import { socketIoInstance } from '~/socketClient'
 function Column({ column }) {
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
@@ -81,6 +82,8 @@ function Column({ column }) {
       ...newCardData,
       boardId: board._id
     })
+
+    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
     //Tương tự createNewColumn ở trên
     // const newBoard = { ...board }
     const newBoard = cloneDeep(board)
@@ -120,6 +123,7 @@ function Column({ column }) {
         dispatch(updateCurrentActiveBoard(newBoard))
         deleteColumnDetailsAPI(column._id).then(() => {
           toast.success('Delete column successfully', { position: 'bottom-right' })
+          socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
         })
       })
       .catch(() => {
@@ -138,6 +142,8 @@ function Column({ column }) {
       }
       // setBoard(newBoard)
       dispatch(updateCurrentActiveBoard(newBoard))
+
+      socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
     })
   }
   return (

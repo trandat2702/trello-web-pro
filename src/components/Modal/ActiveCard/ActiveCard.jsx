@@ -38,6 +38,7 @@ import { updateCardDetailsAPI } from '~/apis'
 import { selectCurrentUser } from '~/redux/user/userSlice'
 import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
+import { socketIoInstance } from '~/socketClient'
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -81,6 +82,8 @@ function ActiveCard() {
     dispatch(updateCurrentActiveCard(updatedCard))
     //B2: Cập nhật lại cái bản ghi card trong activeBoard (nested data)
     dispatch(updateCardInBoard(updatedCard))
+
+    socketIoInstance.emit('FE_UPDATE_BOARD', activeCard.boardId)
 
     return updatedCard
   }

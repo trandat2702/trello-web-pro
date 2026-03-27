@@ -11,6 +11,7 @@ import { createNewColumnAPI } from '~/apis'
 import { cloneDeep } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { socketIoInstance } from '~/socketClient'
 function ListColumns({ columns }) {
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
@@ -32,6 +33,8 @@ function ListColumns({ columns }) {
       ...newcolumnData,
       boardId: board._id
     })
+
+    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
     // cập nhật state board
     //Sau khi lưu DB thành công cập nhật state để hiển thị
     //Đoạn này sẽ dính lỗi object is not extensible bởi dù đã copy/clone

@@ -51,10 +51,10 @@ function Board() {
     // Gọi API cập nhật lại dữ liệu trên server
     updateBoardDetailsAPI(board._id, {
       columnOrderIds: dndOrderedColumnsIds
+    }).then(() => {
+      // Thông báo cho các người dùng khác (Real-time) sau khi API chạy xong
+      socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
     })
-
-    // Thông báo cho các người dùng khác (Real-time)
-    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
   }
 
   const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardsIds, columnId) => {
@@ -74,10 +74,10 @@ function Board() {
     // Gọi API cập nhật lại dữ liệu trên server
     updateColumnDetailsAPI(columnId, {
       cardOrderIds: dndOrderedCardsIds
+    }).then(() => {
+      // Thông báo cho các người dùng khác (Real-time) sau khi API chạy xong
+      socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
     })
-
-    // Thông báo cho các người dùng khác (Real-time)
-    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
   }
 
   //Khi di chuyển card giữa 2 column khác nhau
@@ -103,10 +103,10 @@ function Board() {
       prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(col => col._id === nextColumnId)?.cardOrderIds
+    }).then(() => {
+      // Thông báo cho các người dùng khác (Real-time) sau khi API chạy xong
+      socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
     })
-
-    // Thông báo cho các người dùng khác (Real-time)
-    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
   }
   if (!board) {
     return <PageLoadingSpinner caption="Loading Board..." />
