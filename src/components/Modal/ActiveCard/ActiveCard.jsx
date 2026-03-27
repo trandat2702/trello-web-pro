@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
@@ -36,7 +36,7 @@ import { selectCurrentActiveCard, clearAndHideCurrentActiveCard, updateCurrentAc
 import { styled } from '@mui/material/styles'
 import { updateCardDetailsAPI } from '~/apis'
 import { selectCurrentUser } from '~/redux/user/userSlice'
-import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { updateCardInBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { CARD_MEMBER_ACTIONS } from '~/utils/constants'
 import { socketIoInstance } from '~/socketClient'
 const SidebarItem = styled(Box)(({ theme }) => ({
@@ -67,6 +67,24 @@ function ActiveCard() {
   const activeCard = useSelector(selectCurrentActiveCard)
   const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
   const currentUser = useSelector(selectCurrentUser)
+  const board = useSelector(selectCurrentActiveBoard)
+
+  useEffect(() => {
+    // Khởi tạo tính năng lắng nghe Real-time: Khi dữ liệu Board bị thay đổi bởi Socket.io
+    // Modal Chi tiết Card đang mở sẽ tự động lấy dữ liệu mới nhất trong Board cập nhật lại
+    if (isShowModalActiveCard && activeCard && board) {
+      let currentCard = null
+      for (const column of board.columns) {
+        currentCard = column.cards?.find(c => c._id === activeCard._id)
+        if (currentCard) break
+      }
+      // Dùng JSON.stringify so sánh nếu khác nhau thì cập nhật modal, để tránh bị văng re-render liên tục
+      if (currentCard && JSON.stringify(currentCard) !== JSON.stringify(activeCard)) {
+        dispatch(updateCurrentActiveCard(currentCard))
+      }
+    }
+  }, [board, activeCard, isShowModalActiveCard, dispatch])
+
   //Không dùng biến State để check đóng mở Modal nữa vì chúng ta sẽ check bên Boards/_id.jsx isShowModalActiveCard từ Redux
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
