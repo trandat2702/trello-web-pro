@@ -1,5 +1,5 @@
-// Mặc định là production URL (an toàn khi deploy lên Vercel/Render)
-let apiRoot = 'https://trello-api-h1dj.onrender.com'
+// Mặc định là route /api (được Vercel Rewrite ngầm sang Render)
+let apiRoot = '/api'
 
 // import.meta.env.DEV là biến built-in của Vite:
 // - true khi chạy dev server (npm run dev)
