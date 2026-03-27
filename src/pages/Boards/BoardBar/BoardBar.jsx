@@ -1,4 +1,5 @@
 
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
@@ -7,9 +8,19 @@ import VpnLockIcon from '@mui/icons-material/VpnLock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
 import InviteBoardUser from './InviteBoardUser'
+import { deleteBoardAPI } from '~/apis'
+import { useNavigate } from 'react-router-dom'
+
 const MENU_STYLES = {
   color: 'white',
   backgroundColor: 'transparent',
@@ -23,6 +34,15 @@ const MENU_STYLES = {
   }
 }
 function BoardBar({ board }) {
+  const navigate = useNavigate()
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+
+  const handleDeleteBoard = async () => {
+    await deleteBoardAPI(board._id)
+    setOpenDeleteDialog(false)
+    navigate('/boards')
+  }
+
   return (
     <Box sx={{
       width: '100%',
@@ -77,9 +97,43 @@ function BoardBar({ board }) {
 
         {/* Xử lí hiện thi danh sách thành viên của Board */}
         <BoardUserGroup boardUsers={board?.FE_allUsers} />
+
+        {/* Nút xóa Board */}
+        <Tooltip title="Delete this board">
+          <Chip
+            sx={{
+              ...MENU_STYLES,
+              '&:hover': { bgcolor: 'error.main' }
+            }}
+            icon={<DeleteIcon />}
+            label="Delete"
+            clickable
+            onClick={() => setOpenDeleteDialog(true)}
+          />
+        </Tooltip>
+
+        {/* Dialog xác nhận xóa Board */}
+        <Dialog
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+        >
+          <DialogTitle>{"Delete Board?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Bạn có chắc chắn muốn xóa board <strong>&quot;{board?.title}&quot;</strong>? Tất cả columns và cards bên trong sẽ bị xóa vĩnh viễn và không thể khôi phục!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
+            <Button onClick={handleDeleteBoard} color="error" variant="contained" autoFocus>
+              Confirm Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Box>
   )
 }
 
 export default BoardBar
+
