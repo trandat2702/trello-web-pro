@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard'
+import { socketIoInstance } from '~/socketClient'
 function Board() {
   // const [board, setBoard] = useState(null)
   const dispatch = useDispatch()
@@ -20,6 +21,17 @@ function Board() {
   useEffect(() => {
     // Call API
     dispatch(fetchBoardDetailsAPI(boardId))
+
+    // Real-time cập nhật board
+    const onUpdateBoard = (updatedBoardId) => {
+      if (updatedBoardId === boardId) {
+        dispatch(fetchBoardDetailsAPI(boardId))
+      }
+    }
+    socketIoInstance.on('BE_UPDATE_BOARD', onUpdateBoard)
+    return () => {
+      socketIoInstance.off('BE_UPDATE_BOARD', onUpdateBoard)
+    }
   }, [dispatch, boardId])
 
   //Func này có nhiệm cụ gọi API và xử lý khi kéo thả Column xong xuôi
@@ -40,6 +52,9 @@ function Board() {
     updateBoardDetailsAPI(board._id, {
       columnOrderIds: dndOrderedColumnsIds
     })
+
+    // Thông báo cho các người dùng khác (Real-time)
+    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
   }
 
   const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardsIds, columnId) => {
@@ -60,6 +75,9 @@ function Board() {
     updateColumnDetailsAPI(columnId, {
       cardOrderIds: dndOrderedCardsIds
     })
+
+    // Thông báo cho các người dùng khác (Real-time)
+    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
   }
 
   //Khi di chuyển card giữa 2 column khác nhau
@@ -86,6 +104,9 @@ function Board() {
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(col => col._id === nextColumnId)?.cardOrderIds
     })
+
+    // Thông báo cho các người dùng khác (Real-time)
+    socketIoInstance.emit('FE_UPDATE_BOARD', board._id)
   }
   if (!board) {
     return <PageLoadingSpinner caption="Loading Board..." />
