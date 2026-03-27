@@ -5,10 +5,6 @@
             "destination": "https://trello-api-h1dj.onrender.com/:path*"
         },
         {
-            "source": "/socket.io/:path*",
-            "destination": "https://trello-api-h1dj.onrender.com/socket.io/:path*"
-        },
-        {
             "source": "/((?!.*\\..*).*)",
             "destination": "/index.html"
         }

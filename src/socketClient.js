@@ -1,7 +1,9 @@
 // Cấu hình Socket-io phía client tại đây và export ra biến socketIoInstance
 // https://socket.io/how-to/use-with-react
 import { io } from 'socket.io-client'
-import { API_ROOT } from '~/utils/constants'
-// Trên Vercel production, API_ROOT=' /api ' sẽ làm Socket.io nhầm tưởng là namespace
-// Nên ta phải truyền nguyên URL hiện tại (window.location.origin) để nó gọi đúng vào /socket.io
-export const socketIoInstance = io(import.meta.env.PROD ? window.location.origin : API_ROOT)
+// Vercel không hỗ trợ Proxy (Rewrite) cho WebSockets, nên riêng thằng Socket.io này bắt buộc phải trỏ thẳng về domain gốc của Backend (Render).
+const socketURL = import.meta.env.PROD 
+  ? 'https://trello-api-h1dj.onrender.com'
+  : 'http://localhost:8017'
+
+export const socketIoInstance = io(socketURL)
