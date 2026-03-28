@@ -5,9 +5,6 @@ import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import VpnLockIcon from '@mui/icons-material/VpnLock'
-import AddToDriveIcon from '@mui/icons-material/AddToDrive'
-import BoltIcon from '@mui/icons-material/Bolt'
-import FilterListIcon from '@mui/icons-material/FilterList'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -70,23 +67,6 @@ function BoardBar({ board }) {
           sx={MENU_STYLES}
           icon={<VpnLockIcon />}
           label={capitalizeFirstLetter(board?.type)}
-          clickable
-        />
-
-        <Chip sx={MENU_STYLES}
-          icon={<AddToDriveIcon />}
-          label="Add To Google Drive"
-          clickable
-        />
-
-        <Chip sx={MENU_STYLES}
-          icon={<BoltIcon />}
-          label="Automations"
-          clickable
-        />
-        <Chip sx={MENU_STYLES}
-          icon={<FilterListIcon />}
-          label="Filters"
           clickable
         />
       </Box>

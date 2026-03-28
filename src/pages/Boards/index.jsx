@@ -101,10 +101,6 @@ function Boards() {
                 Boards
               </SidebarItem>
               <SidebarItem>
-                <ListAltIcon fontSize="small" />
-                Templates
-              </SidebarItem>
-              <SidebarItem>
                 <HomeIcon fontSize="small" />
                 Home
               </SidebarItem>
