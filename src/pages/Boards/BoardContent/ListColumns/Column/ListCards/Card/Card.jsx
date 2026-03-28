@@ -1,5 +1,6 @@
 
 import { Card as MuiCard } from '@mui/material'
+import Box from '@mui/material/Box'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
@@ -62,6 +63,18 @@ function Card({ card }) {
         }}>
         {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover} />}
         <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
+          {/* Vùng hiển thị Labels trên Card ở ngoài màn hình Board */}
+          {card?.labels && card?.labels?.length > 0 && (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 1 }}>
+              {card.labels.map((labelColor, index) => (
+                <Box
+                  key={index}
+                  sx={{ width: '40px', height: '8px', borderRadius: '4px', backgroundColor: labelColor }}
+                />
+              ))}
+            </Box>
+          )}
+
           <Typography>{card?.title}</Typography>
         </CardContent>
         {shouldShowCardAction() &&

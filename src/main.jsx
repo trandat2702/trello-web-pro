@@ -16,6 +16,8 @@ import { BrowserRouter } from 'react-router-dom'
 //Cấu hình Redux-Persist
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 /** Xử lí sau khi F5 khi đó store sẽ rỗng tức là { currentUser: null }
  * Hàm persistStore bắt đầu quá trình đọc localStorage và nạp lại dữ liệu vào redux store
@@ -45,7 +47,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             cancellationButtonProps: { color: 'primary' }
           }}>
             <CssBaseline />
-            <App />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <App />
+            </LocalizationProvider>
             <ToastContainer position="bottom-left" theme="colored" />
           </ConfirmProvider>
         </CssVarsProvider>
