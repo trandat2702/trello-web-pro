@@ -13,6 +13,10 @@ import { useParams } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard'
 import { socketIoInstance } from '~/socketClient'
+import {
+  updateCurrentActiveCard,
+  showModalActiveCard
+} from '~/redux/activeCard/activeCardSlice'
 function Board() {
   // const [board, setBoard] = useState(null)
   const dispatch = useDispatch()
@@ -33,6 +37,27 @@ function Board() {
       socketIoInstance.off('BE_UPDATE_BOARD', onUpdateBoard)
     }
   }, [dispatch, boardId])
+  //xử lí cho tính năng shared
+  useEffect(() => {
+    // Chỉ thực hiện khi đã có dữ liệu board và columns
+    if (board && board.columns) {
+      const urlParams = new URLSearchParams(window.location.search)
+      const cardIdFromUrl = urlParams.get('cardId')
+      if (cardIdFromUrl) {
+        let cardToOpen = null
+        // Tìm card trong board
+        for (const column of board.columns) {
+          cardToOpen = column.cards?.find(c => c._id === cardIdFromUrl)
+          if (cardToOpen) break
+        }
+        // Nếu thấy thì mở 
+        if (cardToOpen) {
+          dispatch(updateCurrentActiveCard(cardToOpen))
+          dispatch(showModalActiveCard())
+        }
+      }
+    }
+  }, [board, dispatch])
 
   //Func này có nhiệm cụ gọi API và xử lý khi kéo thả Column xong xuôi
   const moveColumn = (dndOrderedColumns) => {

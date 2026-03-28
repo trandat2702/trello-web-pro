@@ -86,10 +86,9 @@ function ActiveCard() {
   }, [board, activeCard, isShowModalActiveCard, dispatch])
 
   //Không dùng biến State để check đóng mở Modal nữa vì chúng ta sẽ check bên Boards/_id.jsx isShowModalActiveCard từ Redux
-  // const [isOpen, setIsOpen] = useState(true)
-  // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
     dispatch(clearAndHideCurrentActiveCard())
+    window.history.pushState({}, '', window.location.pathname)
   }
 
   //Function dùng chung cho các trường hợp cập nhật card title, description, cover,...
@@ -139,6 +138,17 @@ function ActiveCard() {
   }
   const onUpdateCardMembers = (incomingMemberInfo) => {
     callApiUpdateCard({ incomingMemberInfo })
+  }
+  const handleShareCard = async () => {
+    //Tạo URL, Bạn lấy domain hiện tại cộng với đường dẫn tới board và id của card
+    const currentUrl = window.location.origin
+    const cardLink = `${currentUrl}/boards/${board._id}?cardId=${activeCard._id}`
+    try {
+      await navigator.clipboard.writeText(cardLink)
+      toast.success('Card link copied to clipboard')
+    } catch (error) {
+      toast.error('Failed to copy card link')
+    }
   }
   return (
     <Modal
@@ -269,7 +279,7 @@ function ActiveCard() {
               <SidebarItem><ContentCopyOutlinedIcon fontSize="small" />Copy</SidebarItem>
               <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem>
               <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem>
-              <SidebarItem><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
+              <SidebarItem onClick={handleShareCard}><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
             </Stack>
           </Grid>
         </Grid>

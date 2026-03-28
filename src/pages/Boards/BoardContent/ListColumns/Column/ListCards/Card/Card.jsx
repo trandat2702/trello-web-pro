@@ -38,6 +38,7 @@ function Card({ card }) {
     dispatch(updateCurrentActiveCard(card))
     //Hiện modal lên
     dispatch(showModalActiveCard())
+    window.history.pushState({}, '', `?cardId=${card._id}`)
   }
   return (
     <>
